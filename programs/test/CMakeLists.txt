@@ -1,5 +1,5 @@
 set(libs
-    mbedtls
+    mbedcrypto
 )
 
 if(USE_PKCS11_HELPER_LIBRARY)
