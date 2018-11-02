@@ -170,7 +170,6 @@
     <ClCompile Include="..\..\library\blowfish.c" />
     <ClCompile Include="..\..\library\camellia.c" />
     <ClCompile Include="..\..\library\ccm.c" />
-    <ClCompile Include="..\..\library\certs.c" />
     <ClCompile Include="..\..\library\chacha20.c" />
     <ClCompile Include="..\..\library\chachapoly.c" />
     <ClCompile Include="..\..\library\cipher.c" />
@@ -226,13 +225,6 @@
     <ClCompile Include="..\..\library\timing.c" />
     <ClCompile Include="..\..\library\version.c" />
     <ClCompile Include="..\..\library\version_features.c" />
-    <ClCompile Include="..\..\library\x509.c" />
-    <ClCompile Include="..\..\library\x509_create.c" />
-    <ClCompile Include="..\..\library\x509_crl.c" />
-    <ClCompile Include="..\..\library\x509_crt.c" />
-    <ClCompile Include="..\..\library\x509_csr.c" />
-    <ClCompile Include="..\..\library\x509write_crt.c" />
-    <ClCompile Include="..\..\library\x509write_csr.c" />
     <ClCompile Include="..\..\library\xtea.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
