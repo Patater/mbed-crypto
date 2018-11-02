@@ -615,11 +615,6 @@ component_test_depends_pkalgs () {
     record_status tests/scripts/depends-pkalgs.pl
 }
 
-component_build_key_exchanges () {
-    msg "test/build: key-exchanges (gcc)" # ~ 1 min
-    record_status tests/scripts/key-exchanges.pl
-}
-
 component_build_default_make_gcc_and_cxx () {
     msg "build: Unix make, -Os (gcc)" # ~ 30s
     make CC=gcc CFLAGS='-Werror -Wall -Wextra -Os'
