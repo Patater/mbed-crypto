@@ -76,7 +76,6 @@
 #include "mbedtls/padlock.h"
 #include "mbedtls/pem.h"
 #include "mbedtls/pk.h"
-#include "mbedtls/pkcs11.h"
 #include "mbedtls/pkcs12.h"
 #include "mbedtls/pkcs5.h"
 #include "mbedtls/platform_time.h"
@@ -90,10 +89,6 @@
 #include "mbedtls/threading.h"
 #include "mbedtls/timing.h"
 #include "mbedtls/version.h"
-#include "mbedtls/x509.h"
-#include "mbedtls/x509_crl.h"
-#include "mbedtls/x509_crt.h"
-#include "mbedtls/x509_csr.h"
 #include "mbedtls/xtea.h"
 
 #include <string.h>

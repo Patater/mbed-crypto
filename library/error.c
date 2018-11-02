@@ -193,10 +193,6 @@
 #include "mbedtls/threading.h"
 #endif
 
-#if defined(MBEDTLS_X509_USE_C) || defined(MBEDTLS_X509_CREATE_C)
-#include "mbedtls/x509.h"
-#endif
-
 #if defined(MBEDTLS_XTEA_C)
 #include "mbedtls/xtea.h"
 #endif
@@ -402,49 +398,6 @@ void mbedtls_strerror( int ret, char *buf, size_t buflen )
         if( use_ret == -(MBEDTLS_ERR_RSA_HW_ACCEL_FAILED) )
             mbedtls_snprintf( buf, buflen, "RSA - RSA hardware accelerator failed" );
 #endif /* MBEDTLS_RSA_C */
-
-#if defined(MBEDTLS_X509_USE_C) || defined(MBEDTLS_X509_CREATE_C)
-        if( use_ret == -(MBEDTLS_ERR_X509_FEATURE_UNAVAILABLE) )
-            mbedtls_snprintf( buf, buflen, "X509 - Unavailable feature, e.g. RSA hashing/encryption combination" );
-        if( use_ret == -(MBEDTLS_ERR_X509_UNKNOWN_OID) )
-            mbedtls_snprintf( buf, buflen, "X509 - Requested OID is unknown" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_FORMAT) )
-            mbedtls_snprintf( buf, buflen, "X509 - The CRT/CRL/CSR format is invalid, e.g. different type expected" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_VERSION) )
-            mbedtls_snprintf( buf, buflen, "X509 - The CRT/CRL/CSR version element is invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_SERIAL) )
-            mbedtls_snprintf( buf, buflen, "X509 - The serial tag or value is invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_ALG) )
-            mbedtls_snprintf( buf, buflen, "X509 - The algorithm tag or value is invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_NAME) )
-            mbedtls_snprintf( buf, buflen, "X509 - The name tag or value is invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_DATE) )
-            mbedtls_snprintf( buf, buflen, "X509 - The date tag or value is invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_SIGNATURE) )
-            mbedtls_snprintf( buf, buflen, "X509 - The signature tag or value invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_INVALID_EXTENSIONS) )
-            mbedtls_snprintf( buf, buflen, "X509 - The extension tag or value is invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_UNKNOWN_VERSION) )
-            mbedtls_snprintf( buf, buflen, "X509 - CRT/CRL/CSR has an unsupported version number" );
-        if( use_ret == -(MBEDTLS_ERR_X509_UNKNOWN_SIG_ALG) )
-            mbedtls_snprintf( buf, buflen, "X509 - Signature algorithm (oid) is unsupported" );
-        if( use_ret == -(MBEDTLS_ERR_X509_SIG_MISMATCH) )
-            mbedtls_snprintf( buf, buflen, "X509 - Signature algorithms do not match. (see \\c ::mbedtls_x509_crt sig_oid)" );
-        if( use_ret == -(MBEDTLS_ERR_X509_CERT_VERIFY_FAILED) )
-            mbedtls_snprintf( buf, buflen, "X509 - Certificate verification failed, e.g. CRL, CA or signature check failed" );
-        if( use_ret == -(MBEDTLS_ERR_X509_CERT_UNKNOWN_FORMAT) )
-            mbedtls_snprintf( buf, buflen, "X509 - Format not recognized as DER or PEM" );
-        if( use_ret == -(MBEDTLS_ERR_X509_BAD_INPUT_DATA) )
-            mbedtls_snprintf( buf, buflen, "X509 - Input invalid" );
-        if( use_ret == -(MBEDTLS_ERR_X509_ALLOC_FAILED) )
-            mbedtls_snprintf( buf, buflen, "X509 - Allocation of memory failed" );
-        if( use_ret == -(MBEDTLS_ERR_X509_FILE_IO_ERROR) )
-            mbedtls_snprintf( buf, buflen, "X509 - Read/write of file failed" );
-        if( use_ret == -(MBEDTLS_ERR_X509_BUFFER_TOO_SMALL) )
-            mbedtls_snprintf( buf, buflen, "X509 - Destination buffer is too small" );
-        if( use_ret == -(MBEDTLS_ERR_X509_FATAL_ERROR) )
-            mbedtls_snprintf( buf, buflen, "X509 - A fatal error occurred, eg the chain is too long or the vrfy callback failed" );
-#endif /* MBEDTLS_X509_USE_C || MBEDTLS_X509_CREATE_C */
         // END generated code
 
         if( strlen( buf ) == 0 )
