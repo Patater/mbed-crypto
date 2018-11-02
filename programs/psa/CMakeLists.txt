@@ -1,5 +1,5 @@
 add_executable(crypto_examples crypto_examples.c)
-target_link_libraries(crypto_examples mbedtls)
+target_link_libraries(crypto_examples mbedcrypto)
 
 install(TARGETS crypto_examples
         DESTINATION "bin"
