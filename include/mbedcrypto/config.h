@@ -951,64 +951,6 @@
  */
 #define MBEDTLS_VERSION_FEATURES
 
-/**
- * \def MBEDTLS_X509_ALLOW_EXTENSIONS_NON_V3
- *
- * If set, the X509 parser will not break-off when parsing an X509 certificate
- * and encountering an extension in a v1 or v2 certificate.
- *
- * Uncomment to prevent an error.
- */
-//#define MBEDTLS_X509_ALLOW_EXTENSIONS_NON_V3
-
-/**
- * \def MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION
- *
- * If set, the X509 parser will not break-off when parsing an X509 certificate
- * and encountering an unknown critical extension.
- *
- * \warning Depending on your PKI use, enabling this can be a security risk!
- *
- * Uncomment to prevent an error.
- */
-//#define MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION
-
-/**
- * \def MBEDTLS_X509_CHECK_KEY_USAGE
- *
- * Enable verification of the keyUsage extension (CA and leaf certificates).
- *
- * Disabling this avoids problems with mis-issued and/or misused
- * (intermediate) CA and leaf certificates.
- *
- * \warning Depending on your PKI use, disabling this can be a security risk!
- *
- * Comment to skip keyUsage checking for both CA and leaf certificates.
- */
-#define MBEDTLS_X509_CHECK_KEY_USAGE
-
-/**
- * \def MBEDTLS_X509_CHECK_EXTENDED_KEY_USAGE
- *
- * Enable verification of the extendedKeyUsage extension (leaf certificates).
- *
- * Disabling this avoids problems with mis-issued and/or misused certificates.
- *
- * \warning Depending on your PKI use, disabling this can be a security risk!
- *
- * Comment to skip extendedKeyUsage checking for certificates.
- */
-#define MBEDTLS_X509_CHECK_EXTENDED_KEY_USAGE
-
-/**
- * \def MBEDTLS_X509_RSASSA_PSS_SUPPORT
- *
- * Enable parsing and verification of X.509 certificates, CRLs and CSRS
- * signed with RSASSA-PSS (aka PKCS#1 v2.1).
- *
- * Comment this macro to disallow using RSASSA-PSS in certificates.
- */
-#define MBEDTLS_X509_RSASSA_PSS_SUPPORT
 /* \} name SECTION: mbed TLS feature support */
 
 /**
@@ -1067,8 +1009,7 @@
  * Enable the generic ASN1 parser.
  *
  * Module:  library/asn1.c
- * Caller:  library/x509.c
- *          library/dhm.c
+ * Caller:  library/dhm.c
  *          library/pkcs12.c
  *          library/pkcs5.c
  *          library/pkparse.c
@@ -1083,9 +1024,6 @@
  * Module:  library/asn1write.c
  * Caller:  library/ecdsa.c
  *          library/pkwrite.c
- *          library/x509_create.c
- *          library/x509write_crt.c
- *          library/x509write_csr.c
  */
 #define MBEDTLS_ASN1_WRITE_C
 
@@ -1161,18 +1099,6 @@
  * enabled as well.
  */
 #define MBEDTLS_CCM_C
-
-/**
- * \def MBEDTLS_CERTS_C
- *
- * Enable the test certificates.
- *
- * Module:  library/certs.c
- * Caller:
- *
- * This module is used for testing (ssl_client/server).
- */
-#define MBEDTLS_CERTS_C
 
 /**
  * \def MBEDTLS_CHACHA20_C
@@ -1530,13 +1456,6 @@
  *          library/pkparse.c
  *          library/pkwrite.c
  *          library/rsa.c
- *          library/x509.c
- *          library/x509_create.c
- *          library/x509_crl.c
- *          library/x509_crt.c
- *          library/x509_csr.c
- *          library/x509write_crt.c
- *          library/x509write_csr.c
  *
  * This modules translates between OIDs and internal values.
  */
@@ -1564,9 +1483,6 @@
  * Module:  library/pem.c
  * Caller:  library/dhm.c
  *          library/pkparse.c
- *          library/x509_crl.c
- *          library/x509_crt.c
- *          library/x509_csr.c
  *
  * Requires: MBEDTLS_BASE64_C
  *
@@ -1581,8 +1497,6 @@
  *
  * Module:  library/pem.c
  * Caller:  library/pkwrite.c
- *          library/x509write_crt.c
- *          library/x509write_csr.c
  *
  * Requires: MBEDTLS_BASE64_C
  *
@@ -1609,8 +1523,6 @@
  * Enable the generic public (asymetric) key parser.
  *
  * Module:  library/pkparse.c
- * Caller:  library/x509_crt.c
- *          library/x509_csr.c
  *
  * Requires: MBEDTLS_PK_C
  *
@@ -1624,7 +1536,6 @@
  * Enable the generic public (asymetric) key writer.
  *
  * Module:  library/pkwrite.c
- * Caller:  library/x509write.c
  *
  * Requires: MBEDTLS_PK_C
  *
@@ -1776,7 +1687,6 @@
  *
  * Module:  library/rsa.c
  *          library/rsa_internal.c
- * Caller:  library/x509.c
  *
  * This module is used by the following key exchanges:
  *      RSA, DHE-RSA, ECDHE-RSA, RSA-PSK
@@ -1792,7 +1702,6 @@
  *
  * Module:  library/sha1.c
  * Caller:  library/md.c
- *          library/x509write_crt.c
  *
  * This module is required for SSL/TLS up to version 1.1, for TLS 1.2
  * depending on the handshake parameters, and for SHA1-signed certificates.
@@ -1886,106 +1795,6 @@
  * This module provides run-time version information.
  */
 #define MBEDTLS_VERSION_C
-
-/**
- * \def MBEDTLS_X509_USE_C
- *
- * Enable X.509 core for using certificates.
- *
- * Module:  library/x509.c
- * Caller:  library/x509_crl.c
- *          library/x509_crt.c
- *          library/x509_csr.c
- *
- * Requires: MBEDTLS_ASN1_PARSE_C, MBEDTLS_BIGNUM_C, MBEDTLS_OID_C,
- *           MBEDTLS_PK_PARSE_C
- *
- * This module is required for the X.509 parsing modules.
- */
-#define MBEDTLS_X509_USE_C
-
-/**
- * \def MBEDTLS_X509_CRT_PARSE_C
- *
- * Enable X.509 certificate parsing.
- *
- * Module:  library/x509_crt.c
- * Caller:  library/ssl_cli.c
- *          library/ssl_srv.c
- *          library/ssl_tls.c
- *
- * Requires: MBEDTLS_X509_USE_C
- *
- * This module is required for X.509 certificate parsing.
- */
-#define MBEDTLS_X509_CRT_PARSE_C
-
-/**
- * \def MBEDTLS_X509_CRL_PARSE_C
- *
- * Enable X.509 CRL parsing.
- *
- * Module:  library/x509_crl.c
- * Caller:  library/x509_crt.c
- *
- * Requires: MBEDTLS_X509_USE_C
- *
- * This module is required for X.509 CRL parsing.
- */
-#define MBEDTLS_X509_CRL_PARSE_C
-
-/**
- * \def MBEDTLS_X509_CSR_PARSE_C
- *
- * Enable X.509 Certificate Signing Request (CSR) parsing.
- *
- * Module:  library/x509_csr.c
- * Caller:  library/x509_crt_write.c
- *
- * Requires: MBEDTLS_X509_USE_C
- *
- * This module is used for reading X.509 certificate request.
- */
-#define MBEDTLS_X509_CSR_PARSE_C
-
-/**
- * \def MBEDTLS_X509_CREATE_C
- *
- * Enable X.509 core for creating certificates.
- *
- * Module:  library/x509_create.c
- *
- * Requires: MBEDTLS_BIGNUM_C, MBEDTLS_OID_C, MBEDTLS_PK_WRITE_C
- *
- * This module is the basis for creating X.509 certificates and CSRs.
- */
-#define MBEDTLS_X509_CREATE_C
-
-/**
- * \def MBEDTLS_X509_CRT_WRITE_C
- *
- * Enable creating X.509 certificates.
- *
- * Module:  library/x509_crt_write.c
- *
- * Requires: MBEDTLS_X509_CREATE_C
- *
- * This module is required for X.509 certificate creation.
- */
-#define MBEDTLS_X509_CRT_WRITE_C
-
-/**
- * \def MBEDTLS_X509_CSR_WRITE_C
- *
- * Enable creating X.509 Certificate Signing Requests (CSR).
- *
- * Module:  library/x509_csr_write.c
- *
- * Requires: MBEDTLS_X509_CREATE_C
- *
- * This module is required for X.509 certificate request writing.
- */
-#define MBEDTLS_X509_CSR_WRITE_C
 
 /**
  * \def MBEDTLS_XTEA_C
