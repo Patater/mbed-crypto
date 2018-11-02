@@ -97,13 +97,6 @@ KEEP_GOING=0
 RUN_ARMCC=1
 
 # Default commands, can be overriden by the environment
-: ${OPENSSL:="openssl"}
-: ${OPENSSL_LEGACY:="$OPENSSL"}
-: ${OPENSSL_NEXT:="$OPENSSL"}
-: ${GNUTLS_CLI:="gnutls-cli"}
-: ${GNUTLS_SERV:="gnutls-serv"}
-: ${GNUTLS_LEGACY_CLI:="$GNUTLS_CLI"}
-: ${GNUTLS_LEGACY_SERV:="$GNUTLS_SERV"}
 : ${OUT_OF_SOURCE_DIR:=./mbedtls_out_of_source_build}
 : ${ARMC5_BIN_DIR:=/usr/bin}
 : ${ARMC6_BIN_DIR:=/usr/bin}
@@ -136,13 +129,6 @@ General options:
 Tool path options:
      --armc5-bin-dir=<ARMC5_bin_dir_path>       ARM Compiler 5 bin directory.
      --armc6-bin-dir=<ARMC6_bin_dir_path>       ARM Compiler 6 bin directory.
-     --gnutls-cli=<GnuTLS_cli_path>             GnuTLS client executable to use for most tests.
-     --gnutls-serv=<GnuTLS_serv_path>           GnuTLS server executable to use for most tests.
-     --gnutls-legacy-cli=<GnuTLS_cli_path>      GnuTLS client executable to use for legacy tests.
-     --gnutls-legacy-serv=<GnuTLS_serv_path>    GnuTLS server executable to use for legacy tests.
-     --openssl=<OpenSSL_path>                   OpenSSL executable to use for most tests.
-     --openssl-legacy=<OpenSSL_path>            OpenSSL executable to use for legacy tests e.g. SSLv3.
-     --openssl-next=<OpenSSL_path>              OpenSSL executable to use for recent things like ARIA
 EOF
 }
 
@@ -249,9 +235,6 @@ while [ $# -gt 0 ]; do
         --no-force) FORCE=0;;
         --no-keep-going) KEEP_GOING=0;;
         --no-memory) MEMORY=0;;
-        --openssl) shift; OPENSSL="$1";;
-        --openssl-legacy) shift; OPENSSL_LEGACY="$1";;
-        --openssl-next) shift; OPENSSL_NEXT="$1";;
         --out-of-source-dir) shift; OUT_OF_SOURCE_DIR="$1";;
         --random-seed) unset SEED;;
         --release-test|-r) SEED=1;;
@@ -376,21 +359,8 @@ ARMC5_AR="$ARMC5_BIN_DIR/armar"
 ARMC6_CC="$ARMC6_BIN_DIR/armclang"
 ARMC6_AR="$ARMC6_BIN_DIR/armar"
 
-# To avoid setting OpenSSL and GnuTLS for each call to compat.sh and ssl-opt.sh
-# we just export the variables they require
-export OPENSSL_CMD="$OPENSSL"
-export GNUTLS_CLI="$GNUTLS_CLI"
-export GNUTLS_SERV="$GNUTLS_SERV"
-
-# Avoid passing --seed flag in every call to ssl-opt.sh
-if [ -n "${SEED-}" ]; then
-  export SEED
-fi
-
 # Make sure the tools we need are available.
-check_tools "$OPENSSL" "$OPENSSL_LEGACY" "$OPENSSL_NEXT" \
-            "$GNUTLS_CLI" "$GNUTLS_SERV" \
-            "$GNUTLS_LEGACY_CLI" "$GNUTLS_LEGACY_SERV" "doxygen" "dot" \
+check_tools "doxygen" "dot" \
             "arm-none-eabi-gcc" "i686-w64-mingw32-gcc" "gdb"
 if [ $RUN_ARMCC -ne 0 ]; then
     check_tools "$ARMC5_CC" "$ARMC5_AR" "$ARMC6_CC" "$ARMC6_AR"
@@ -453,47 +423,11 @@ make
 msg "test: main suites (inc. selftests) (ASan build)" # ~ 50s
 make test
 
-msg "test: ssl-opt.sh (ASan build)" # ~ 1 min
-if_build_succeeded tests/ssl-opt.sh
-
 msg "test/build: ref-configs (ASan build)" # ~ 6 min 20s
 record_status tests/scripts/test-ref-configs.pl
 
 msg "build: with ASan (rebuild after ref-configs)" # ~ 1 min
 make
-
-msg "test: compat.sh (ASan build)" # ~ 6 min
-if_build_succeeded tests/compat.sh
-
-msg "build: Default + SSLv3 (ASan build)" # ~ 6 min
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl set MBEDTLS_SSL_PROTO_SSL3
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: SSLv3 - main suites (inc. selftests) (ASan build)" # ~ 50s
-make test
-
-msg "build: SSLv3 - compat.sh (ASan build)" # ~ 6 min
-if_build_succeeded tests/compat.sh -m 'tls1 tls1_1 tls1_2 dtls1 dtls1_2'
-if_build_succeeded env OPENSSL_CMD="$OPENSSL_LEGACY" tests/compat.sh -m 'ssl3'
-
-msg "build: SSLv3 - ssl-opt.sh (ASan build)" # ~ 6 min
-if_build_succeeded tests/ssl-opt.sh
-
-msg "build: Default + !MBEDTLS_SSL_RENEGOTIATION (ASan build)" # ~ 6 min
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl unset MBEDTLS_SSL_RENEGOTIATION
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: !MBEDTLS_SSL_RENEGOTIATION - main suites (inc. selftests) (ASan build)" # ~ 50s
-make test
-
-msg "test: !MBEDTLS_SSL_RENEGOTIATION - ssl-opt.sh (ASan build)" # ~ 6 min
-if_build_succeeded tests/ssl-opt.sh
 
 msg "build: Default + RSA_NO_CRT (ASan build)" # ~ 6 min
 cleanup
@@ -505,54 +439,6 @@ make
 msg "test: RSA_NO_CRT - main suites (inc. selftests) (ASan build)" # ~ 50s
 make test
 
-msg "test: RSA_NO_CRT - RSA-related part of ssl-opt.sh (ASan build)" # ~ 5s
-if_build_succeeded tests/ssl-opt.sh -f RSA
-
-msg "test: RSA_NO_CRT - RSA-related part of compat.sh (ASan build)" # ~ 3 min
-if_build_succeeded tests/compat.sh -t RSA
-
-msg "build: small SSL_OUT_CONTENT_LEN (ASan build)"
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl set MBEDTLS_SSL_IN_CONTENT_LEN 16384
-scripts/config.pl set MBEDTLS_SSL_OUT_CONTENT_LEN 4096
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: small SSL_OUT_CONTENT_LEN - ssl-opt.sh MFL and large packet tests"
-if_build_succeeded tests/ssl-opt.sh -f "Max fragment\|Large packet"
-
-msg "build: small SSL_IN_CONTENT_LEN (ASan build)"
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl set MBEDTLS_SSL_IN_CONTENT_LEN 4096
-scripts/config.pl set MBEDTLS_SSL_OUT_CONTENT_LEN 16384
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: small SSL_IN_CONTENT_LEN - ssl-opt.sh MFL tests"
-if_build_succeeded tests/ssl-opt.sh -f "Max fragment"
-
-msg "build: small MBEDTLS_SSL_DTLS_MAX_BUFFERING #0"
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl set MBEDTLS_SSL_DTLS_MAX_BUFFERING 1000
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: small MBEDTLS_SSL_DTLS_MAX_BUFFERING #0 - ssl-opt.sh specific reordering test"
-if_build_succeeded tests/ssl-opt.sh -f "DTLS reordering: Buffer out-of-order hs msg before reassembling next, free buffered msg"
-
-msg "build: small MBEDTLS_SSL_DTLS_MAX_BUFFERING #1"
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl set MBEDTLS_SSL_DTLS_MAX_BUFFERING 240
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: small MBEDTLS_SSL_DTLS_MAX_BUFFERING #1 - ssl-opt.sh specific reordering test"
-if_build_succeeded tests/ssl-opt.sh -f "DTLS reordering: Buffer encrypted Finished message, drop for fragmented NewSessionTicket"
-
 msg "build: cmake, full config, clang" # ~ 50s
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
@@ -563,15 +449,6 @@ make
 
 msg "test: main suites (full config)" # ~ 5s
 make test
-
-msg "test: ssl-opt.sh default, ECJPAKE, SSL async (full config)" # ~ 1s
-if_build_succeeded tests/ssl-opt.sh -f 'Default\|ECJPAKE\|SSL async private'
-
-msg "test: compat.sh RC4, DES & NULL (full config)" # ~ 2 min
-if_build_succeeded env OPENSSL_CMD="$OPENSSL_LEGACY" GNUTLS_CLI="$GNUTLS_LEGACY_CLI" GNUTLS_SERV="$GNUTLS_LEGACY_SERV" tests/compat.sh -e '3DES\|DES-CBC3' -f 'NULL\|DES\|RC4\|ARCFOUR'
-
-msg "test: compat.sh ARIA + ChachaPoly"
-if_build_succeeded env OPENSSL_CMD="$OPENSSL_NEXT" tests/compat.sh -e '^$' -f 'ARIA\|CHACHA'
 
 msg "build: make, full config + DEPRECATED_WARNING, gcc -O" # ~ 30s
 cleanup
@@ -625,7 +502,6 @@ cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
 scripts/config.pl full
 scripts/config.pl unset MBEDTLS_PLATFORM_C
-scripts/config.pl unset MBEDTLS_NET_C
 scripts/config.pl unset MBEDTLS_PLATFORM_MEMORY
 scripts/config.pl unset MBEDTLS_PLATFORM_PRINTF_ALT
 scripts/config.pl unset MBEDTLS_PLATFORM_FPRINTF_ALT
@@ -651,52 +527,14 @@ scripts/config.pl set MBEDTLS_PLATFORM_NO_STD_FUNCTIONS
 scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
 make CC=gcc CFLAGS='-Werror -Wall -Wextra -O0'
 
-msg "build: full config except ssl_srv.c, make, gcc" # ~ 30s
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl full
-scripts/config.pl unset MBEDTLS_SSL_SRV_C
-make CC=gcc CFLAGS='-Werror -Wall -Wextra -O0'
-
-msg "build: full config except ssl_cli.c, make, gcc" # ~ 30s
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl full
-scripts/config.pl unset MBEDTLS_SSL_CLI_C
-make CC=gcc CFLAGS='-Werror -Wall -Wextra -O0'
-
 # Note, C99 compliance can also be tested with the sockets support disabled,
 # as that requires a POSIX platform (which isn't the same as C99).
-msg "build: full config except net_sockets.c, make, gcc -std=c99 -pedantic" # ~ 30s
+msg "build: full config, make, gcc -std=c99 -pedantic" # ~ 30s
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
 scripts/config.pl full
-scripts/config.pl unset MBEDTLS_NET_C # getaddrinfo() undeclared, etc.
 scripts/config.pl set MBEDTLS_NO_PLATFORM_ENTROPY # uses syscall() on GNU/Linux
 make CC=gcc CFLAGS='-Werror -Wall -Wextra -O0 -std=c99 -pedantic' lib
-
-# Run max fragment length tests with MFL disabled
-msg "build: default config except MFL extension (ASan build)" # ~ 30s
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl unset MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: ssl-opt.sh, MFL-related tests"
-if_build_succeeded tests/ssl-opt.sh -f "Max fragment length"
-
-msg "build: no MFL extension, small SSL_OUT_CONTENT_LEN (ASan build)"
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl unset MBEDTLS_SSL_MAX_FRAGMENT_LENGTH
-scripts/config.pl set MBEDTLS_SSL_IN_CONTENT_LEN 16384
-scripts/config.pl set MBEDTLS_SSL_OUT_CONTENT_LEN 4096
-CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
-make
-
-msg "test: MFL tests (disabled MFL extension case) & large packet tests"
-if_build_succeeded tests/ssl-opt.sh -f "Max fragment length\|Large buffer"
 
 msg "build: default config with  MBEDTLS_TEST_NULL_ENTROPY (ASan build)"
 cleanup
@@ -841,7 +679,6 @@ msg "build: arm-none-eabi-gcc, make" # ~ 10s
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
 scripts/config.pl full
-scripts/config.pl unset MBEDTLS_NET_C
 scripts/config.pl unset MBEDTLS_TIMING_C
 scripts/config.pl unset MBEDTLS_FS_IO
 scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
@@ -860,7 +697,6 @@ msg "build: arm-none-eabi-gcc -DMBEDTLS_NO_UDBL_DIVISION, make" # ~ 10s
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
 scripts/config.pl full
-scripts/config.pl unset MBEDTLS_NET_C
 scripts/config.pl unset MBEDTLS_TIMING_C
 scripts/config.pl unset MBEDTLS_FS_IO
 scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
@@ -882,7 +718,6 @@ msg "build: arm-none-eabi-gcc MBEDTLS_NO_64BIT_MULTIPLICATION, make" # ~ 10s
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
 scripts/config.pl full
-scripts/config.pl unset MBEDTLS_NET_C
 scripts/config.pl unset MBEDTLS_TIMING_C
 scripts/config.pl unset MBEDTLS_FS_IO
 scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
@@ -904,7 +739,6 @@ msg "build: ARM Compiler 5, make"
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
 scripts/config.pl full
-scripts/config.pl unset MBEDTLS_NET_C
 scripts/config.pl unset MBEDTLS_TIMING_C
 scripts/config.pl unset MBEDTLS_FS_IO
 scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
@@ -942,15 +776,6 @@ if [ $RUN_ARMCC -ne 0 ]; then
     armc6_build_test "--target=aarch64-arm-none-eabi -march=armv8.2-a"
 fi
 
-msg "build: allow SHA1 in certificates by default"
-cleanup
-cp "$CONFIG_H" "$CONFIG_BAK"
-scripts/config.pl set MBEDTLS_TLS_DEFAULT_ALLOW_SHA1_IN_CERTIFICATES
-make CFLAGS='-Werror -Wall -Wextra'
-msg "test: allow SHA1 in certificates by default"
-make test
-if_build_succeeded tests/ssl-opt.sh -f SHA-1
-
 msg "build: Default + MBEDTLS_RSA_NO_CRT (ASan build)" # ~ 6 min
 cleanup
 cp "$CONFIG_H" "$CONFIG_BAK"
@@ -987,16 +812,6 @@ if uname -a | grep 'Linux.*x86_64' >/dev/null; then
     msg "test: main suites (MSan)" # ~ 10s
     make test
 
-    msg "test: ssl-opt.sh (MSan)" # ~ 1 min
-    if_build_succeeded tests/ssl-opt.sh
-
-    # Optional part(s)
-
-    if [ "$MEMORY" -gt 0 ]; then
-        msg "test: compat.sh (MSan)" # ~ 6 min 20s
-        if_build_succeeded tests/compat.sh
-    fi
-
 else # no MemSan
 
     msg "build: Release (clang)"
@@ -1011,16 +826,6 @@ else # no MemSan
     # Currently broken, programs don't seem to receive signals
     # under valgrind on OS X
 
-    if [ "$MEMORY" -gt 0 ]; then
-        msg "test: ssl-opt.sh --memcheck (Release)"
-        if_build_succeeded tests/ssl-opt.sh --memcheck
-    fi
-
-    if [ "$MEMORY" -gt 1 ]; then
-        msg "test: compat.sh --memcheck (Release)"
-        if_build_succeeded tests/compat.sh --memcheck
-    fi
-
 fi # MemSan
 
 msg "build: cmake 'out-of-source' build"
@@ -1033,17 +838,6 @@ make
 
 msg "test: cmake 'out-of-source' build"
 make test
-# Test an SSL option that requires an auxiliary script in test/scripts/.
-# Also ensure that there are no error messages such as
-# "No such file or directory", which would indicate that some required
-# file is missing (ssl-opt.sh tolerates the absence of some files so
-# may exit with status 0 but emit errors).
-if_build_succeeded ./tests/ssl-opt.sh -f 'Fallback SCSV: beginning of list' 2>ssl-opt.err
-if [ -s ssl-opt.err ]; then
-  cat ssl-opt.err >&2
-  record_status [ ! -s ssl-opt.err ]
-  rm ssl-opt.err
-fi
 cd "$MBEDTLS_ROOT_DIR"
 rm -rf "$OUT_OF_SOURCE_DIR"
 unset MBEDTLS_ROOT_DIR
