@@ -2,7 +2,7 @@
 
 set -eu
 
-if [ -d include/mbedtls ]; then :; else
+if [ -d include/psa ]; then :; else
     echo "$0: must be run from root" >&2
     exit 1
 fi

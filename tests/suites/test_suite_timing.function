@@ -10,7 +10,7 @@
 
 #include <limits.h>
 
-#include "mbedtls/timing.h"
+#include "timing.h"
 
 /* Wait this many milliseconds for a short timing test. This duration
    should be large enough that, in practice, if you read the timer

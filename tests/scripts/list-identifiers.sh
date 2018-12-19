@@ -2,12 +2,12 @@
 
 set -eu
 
-if [ -d include/mbedtls ]; then :; else
+if [ -d include/psa ]; then :; else
     echo "$0: must be run from root" >&2
     exit 1
 fi
 
-HEADERS=$( ls include/mbedtls/*.h include/psa/*.h library/*.h | egrep -v 'compat-1\.3\.h|bn_mul' )
+HEADERS=$( ls library/mbedtls/*.h include/psa/*.h library/*.h | egrep -v 'compat-1\.3\.h|bn_mul' )
 
 rm -f identifiers
 

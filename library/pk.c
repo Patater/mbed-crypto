@@ -26,23 +26,23 @@
 #endif
 
 #if defined(MBEDTLS_PK_C)
-#include "mbedtls/pk.h"
-#include "mbedtls/pk_internal.h"
+#include "pk.h"
+#include "pk_internal.h"
 
-#include "mbedtls/platform_util.h"
+#include "platform_util.h"
 
 #if defined(MBEDTLS_RSA_C)
-#include "mbedtls/rsa.h"
+#include "rsa.h"
 #endif
 #if defined(MBEDTLS_ECP_C)
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 #endif
 #if defined(MBEDTLS_ECDSA_C)
-#include "mbedtls/ecdsa.h"
+#include "ecdsa.h"
 #endif
 
 #if defined(MBEDTLS_USE_PSA_CRYPTO)
-#include "mbedtls/psa_util.h"
+#include "psa_util.h"
 #endif
 
 #include <limits.h>

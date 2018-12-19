@@ -31,7 +31,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,9 +41,9 @@
 #define MBEDTLS_EXIT_FAILURE    EXIT_FAILURE
 #endif /* MBEDTLS_PLATFORM_C */
 
-#include "mbedtls/aes.h"
-#include "mbedtls/md.h"
-#include "mbedtls/platform_util.h"
+#include "aes.h"
+#include "md.h"
+#include "platform_util.h"
 
 #include <stdio.h>
 #include <stdlib.h>

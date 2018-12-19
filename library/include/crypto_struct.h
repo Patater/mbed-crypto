@@ -43,17 +43,17 @@
 #include MBEDTLS_CONFIG_FILE
 #endif
 
-#include "mbedtls/cipher.h"
-#include "mbedtls/cmac.h"
-#include "mbedtls/gcm.h"
-#include "mbedtls/md.h"
-#include "mbedtls/md2.h"
-#include "mbedtls/md4.h"
-#include "mbedtls/md5.h"
-#include "mbedtls/ripemd160.h"
-#include "mbedtls/sha1.h"
-#include "mbedtls/sha256.h"
-#include "mbedtls/sha512.h"
+#include "cipher.h"
+#include "cmac.h"
+#include "gcm.h"
+#include "md.h"
+#include "md2.h"
+#include "md4.h"
+#include "md5.h"
+#include "ripemd160.h"
+#include "sha1.h"
+#include "sha256.h"
+#include "sha512.h"
 
 struct psa_hash_operation_s
 {

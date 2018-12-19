@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/gcm.h"
+#include "gcm.h"
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES

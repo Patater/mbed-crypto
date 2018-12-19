@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,9 +37,9 @@
 
 #if defined(MBEDTLS_BIGNUM_C) && \
     defined(MBEDTLS_PK_PARSE_C) && defined(MBEDTLS_FS_IO)
-#include "mbedtls/error.h"
-#include "mbedtls/rsa.h"
-#include "mbedtls/pk.h"
+#include "error.h"
+#include "rsa.h"
+#include "pk.h"
 
 #include <string.h>
 #endif

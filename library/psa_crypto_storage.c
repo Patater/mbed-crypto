@@ -33,10 +33,10 @@
 #include "psa/crypto.h"
 #include "psa_crypto_storage.h"
 #include "psa_crypto_storage_backend.h"
-#include "mbedtls/platform_util.h"
+#include "platform_util.h"
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #define mbedtls_calloc   calloc
 #define mbedtls_free     free

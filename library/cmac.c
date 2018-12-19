@@ -48,14 +48,14 @@
 
 #if defined(MBEDTLS_CMAC_C)
 
-#include "mbedtls/cmac.h"
-#include "mbedtls/platform_util.h"
+#include "cmac.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define mbedtls_calloc     calloc

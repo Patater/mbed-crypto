@@ -12,9 +12,13 @@ endif(ENABLE_ZLIB_SUPPORT)
 
 add_executable(selftest selftest.c)
 target_link_libraries(selftest ${libs})
+target_include_directories(selftest
+    PRIVATE ${CMAKE_SOURCE_DIR}/library/include/)
 
 add_executable(benchmark benchmark.c)
 target_link_libraries(benchmark ${libs})
+target_include_directories(benchmark
+    PRIVATE ${CMAKE_SOURCE_DIR}/library/include/)
 
 if(TEST_CPP)
     add_executable(cpp_dummy_build cpp_dummy_build.cpp)
@@ -23,6 +27,8 @@ endif()
 
 add_executable(zeroize zeroize.c)
 target_link_libraries(zeroize ${libs})
+target_include_directories(zeroize
+    PRIVATE ${CMAKE_SOURCE_DIR}/library/include/)
 
 install(TARGETS selftest benchmark
         DESTINATION "bin"

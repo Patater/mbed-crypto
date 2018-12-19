@@ -28,9 +28,9 @@
 
 #if defined(MBEDTLS_RSA_C)
 
-#include "mbedtls/rsa.h"
-#include "mbedtls/bignum.h"
-#include "mbedtls/rsa_internal.h"
+#include "rsa.h"
+#include "bignum.h"
+#include "rsa_internal.h"
 
 /*
  * Compute RSA prime factors from public and private exponents

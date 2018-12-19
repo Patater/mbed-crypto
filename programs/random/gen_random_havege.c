@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +37,7 @@
 #endif /* MBEDTLS_PLATFORM_C */
 
 #if defined(MBEDTLS_HAVEGE_C) && defined(MBEDTLS_FS_IO)
-#include "mbedtls/havege.h"
+#include "havege.h"
 
 #include <stdio.h>
 #include <time.h>

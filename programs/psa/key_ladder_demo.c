@@ -58,7 +58,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define MBEDTLS_EXIT_SUCCESS EXIT_SUCCESS
@@ -70,7 +70,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "mbedtls/platform_util.h" // for mbedtls_platform_zeroize
+#include "platform_util.h" // for mbedtls_platform_zeroize
 
 /* If the build options we need are not enabled, compile a placeholder. */
 #if !defined(MBEDTLS_SHA256_C) || !defined(MBEDTLS_MD_C) ||     \

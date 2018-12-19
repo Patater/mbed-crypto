@@ -34,7 +34,7 @@
 
 #if defined(MBEDTLS_ECDH_C)
 
-#include "mbedtls/ecdh.h"
+#include "ecdh.h"
 
 #include <string.h>
 

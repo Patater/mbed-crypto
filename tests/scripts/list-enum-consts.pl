@@ -6,9 +6,9 @@ use strict;
 use utf8;
 use open qw(:std utf8);
 
--d 'include/mbedtls' or die "$0: must be run from root\n";
+-d 'include/psa' or die "$0: must be run from root\n";
 
-@ARGV = grep { ! /compat-1\.3\.h/ } <include/mbedtls/*.h>;
+@ARGV = grep { ! /compat-1\.3\.h/ } <include/psa/*.h>;
 
 my @consts;
 my $state = 'out';

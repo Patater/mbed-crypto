@@ -36,14 +36,14 @@
 
 #if defined(MBEDTLS_CCM_C)
 
-#include "mbedtls/ccm.h"
-#include "mbedtls/platform_util.h"
+#include "ccm.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_AES_C)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf

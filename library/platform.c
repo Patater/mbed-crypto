@@ -27,8 +27,8 @@
 
 #if defined(MBEDTLS_PLATFORM_C)
 
-#include "mbedtls/platform.h"
-#include "mbedtls/platform_util.h"
+#include "platform.h"
+#include "platform_util.h"
 
 /* The compile time configuration of memory allocation via the macros
  * MBEDTLS_PLATFORM_{FREE/CALLOC}_MACRO takes precedence over the runtime

@@ -34,9 +34,9 @@
 
 #if defined(MBEDTLS_HAVEGE_C)
 
-#include "mbedtls/havege.h"
-#include "mbedtls/timing.h"
-#include "mbedtls/platform_util.h"
+#include "havege.h"
+#include "timing.h"
+#include "platform_util.h"
 
 #include <string.h>
 

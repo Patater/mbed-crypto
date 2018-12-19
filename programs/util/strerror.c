@@ -26,14 +26,14 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf     printf
 #endif
 
 #if defined(MBEDTLS_ERROR_C) || defined(MBEDTLS_ERROR_STRERROR_DUMMY)
-#include "mbedtls/error.h"
+#include "error.h"
 
 #include <stdio.h>
 #include <stdlib.h>

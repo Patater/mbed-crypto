@@ -27,17 +27,17 @@
 
 #if defined(MBEDTLS_ASN1_PARSE_C)
 
-#include "mbedtls/asn1.h"
-#include "mbedtls/platform_util.h"
+#include "asn1.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_BIGNUM_C)
-#include "mbedtls/bignum.h"
+#include "bignum.h"
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define mbedtls_calloc    calloc

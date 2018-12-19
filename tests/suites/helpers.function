@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_fprintf    fprintf
@@ -20,7 +20,7 @@
 #endif
 
 #if defined(MBEDTLS_MEMORY_BUFFER_ALLOC_C)
-#include "mbedtls/memory_buffer_alloc.h"
+#include "memory_buffer_alloc.h"
 #endif
 
 #ifdef _MSC_VER

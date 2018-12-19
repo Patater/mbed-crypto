@@ -30,8 +30,8 @@
 
 #include "psa/crypto.h"
 
-#include "mbedtls/ecp.h"
-#include "mbedtls/rsa.h"
+#include "ecp.h"
+#include "rsa.h"
 
 /** The data structure representing a key slot, containing key material
  * and metadata for one key.

@@ -27,7 +27,7 @@
 
 #if defined(MBEDTLS_ECP_C)
 
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #include <string.h>
 

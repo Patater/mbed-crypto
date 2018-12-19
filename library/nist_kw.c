@@ -37,15 +37,15 @@
 
 #if defined(MBEDTLS_NIST_KW_C)
 
-#include "mbedtls/nist_kw.h"
-#include "mbedtls/platform_util.h"
+#include "nist_kw.h"
+#include "platform_util.h"
 
 #include <stdint.h>
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_AES_C)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf
