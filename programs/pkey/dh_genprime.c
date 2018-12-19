@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,9 +48,9 @@ int main( void )
 }
 #else
 
-#include "mbedtls/bignum.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/ctr_drbg.h"
+#include "bignum.h"
+#include "entropy.h"
+#include "ctr_drbg.h"
 
 #include <stdio.h>
 #include <string.h>

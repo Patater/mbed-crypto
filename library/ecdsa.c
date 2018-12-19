@@ -33,17 +33,17 @@
 
 #if defined(MBEDTLS_ECDSA_C)
 
-#include "mbedtls/ecdsa.h"
-#include "mbedtls/asn1write.h"
+#include "ecdsa.h"
+#include "asn1write.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_ECDSA_DETERMINISTIC)
-#include "mbedtls/hmac_drbg.h"
+#include "hmac_drbg.h"
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define mbedtls_calloc    calloc

@@ -33,13 +33,13 @@
 
 #if defined(MBEDTLS_ARIA_C)
 
-#include "mbedtls/aria.h"
+#include "aria.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf
@@ -48,7 +48,7 @@
 
 #if !defined(MBEDTLS_ARIA_ALT)
 
-#include "mbedtls/platform_util.h"
+#include "platform_util.h"
 
 #if ( defined(__ARMCC_VERSION) || defined(_MSC_VER) ) && \
     !defined(inline) && !defined(__cplusplus)

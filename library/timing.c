@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf     printf
@@ -34,7 +34,7 @@
 
 #if defined(MBEDTLS_TIMING_C)
 
-#include "mbedtls/timing.h"
+#include "timing.h"
 
 #if !defined(MBEDTLS_TIMING_ALT)
 

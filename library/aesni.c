@@ -38,7 +38,7 @@
 #endif
 #endif
 
-#include "mbedtls/aesni.h"
+#include "aesni.h"
 
 #include <string.h>
 

@@ -27,14 +27,14 @@
 
 #if defined(MBEDTLS_BASE64_C)
 
-#include "mbedtls/base64.h"
+#include "base64.h"
 
 #include <stdint.h>
 
 #if defined(MBEDTLS_SELF_TEST)
 #include <string.h>
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf

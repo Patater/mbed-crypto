@@ -1,6 +1,6 @@
 /* BEGIN_HEADER */
-#include "mbedtls/entropy.h"
-#include "mbedtls/entropy_poll.h"
+#include "entropy.h"
+#include "entropy_poll.h"
 #include "string.h"
 
 /*

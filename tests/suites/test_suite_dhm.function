@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/dhm.h"
+#include "dhm.h"
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES

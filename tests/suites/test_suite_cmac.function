@@ -1,6 +1,6 @@
 /* BEGIN_HEADER */
-#include "mbedtls/cipher.h"
-#include "mbedtls/cmac.h"
+#include "cipher.h"
+#include "cmac.h"
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES

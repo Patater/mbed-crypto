@@ -37,18 +37,18 @@
 
 #if defined(MBEDTLS_GCM_C)
 
-#include "mbedtls/gcm.h"
-#include "mbedtls/platform_util.h"
+#include "gcm.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_AESNI_C)
-#include "mbedtls/aesni.h"
+#include "aesni.h"
 #endif
 
 #if defined(MBEDTLS_SELF_TEST) && defined(MBEDTLS_AES_C)
-#include "mbedtls/aes.h"
-#include "mbedtls/platform.h"
+#include "aes.h"
+#include "platform.h"
 #if !defined(MBEDTLS_PLATFORM_C)
 #include <stdio.h>
 #define mbedtls_printf printf

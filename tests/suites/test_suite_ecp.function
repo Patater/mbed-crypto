@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 

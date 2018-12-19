@@ -19,7 +19,6 @@ my $vsx_sln_tpl_file = "scripts/data_files/vs2010-sln-template.sln";
 my $vsx_sln_file = "$vsx_dir/mbedTLS.sln";
 
 my $programs_dir = 'programs';
-my $mbedtls_header_dir = 'include/mbedtls';
 my $psa_header_dir = 'include/psa';
 my $source_dir = 'library';
 
@@ -54,7 +53,6 @@ exit( main() );
 
 sub check_dirs {
     return -d $vsx_dir
-        && -d $mbedtls_header_dir
         && -d $psa_header_dir
         && -d $source_dir
         && -d $programs_dir;
@@ -133,10 +131,9 @@ sub gen_entry_list {
 }
 
 sub gen_main_file {
-    my ($mbedtls_headers, $psa_headers, $source_headers, $sources, $hdr_tpl, $src_tpl, $main_tpl, $main_out) = @_;
+    my ($psa_headers, $source_headers, $sources, $hdr_tpl, $src_tpl, $main_tpl, $main_out) = @_;
 
-    my $header_entries = gen_entry_list( $hdr_tpl, @$mbedtls_headers );
-    $header_entries .= gen_entry_list( $hdr_tpl, @$psa_headers );
+    my $header_entries = gen_entry_list( $hdr_tpl, @$psa_headers );
     $header_entries .= gen_entry_list( $hdr_tpl, @$source_headers );
     my $source_entries = gen_entry_list( $src_tpl, @$sources );
 
@@ -191,17 +188,15 @@ sub main {
     del_vsx_files();
 
     my @app_list = get_app_list();
-    my @mbedtls_headers = <$mbedtls_header_dir/*.h>;
     my @psa_headers = <$psa_header_dir/*.h>;
     my @source_headers = <$source_dir/*.h>;
     my @sources = <$source_dir/*.c>;
-    map { s!/!\\!g } @mbedtls_headers;
     map { s!/!\\!g } @psa_headers;
     map { s!/!\\!g } @sources;
 
     gen_app_files( @app_list );
 
-    gen_main_file( \@mbedtls_headers, \@psa_headers, \@source_headers,
+    gen_main_file( \@psa_headers, \@source_headers,
                    \@sources, $vsx_hdr_tpl, $vsx_src_tpl,
                    $vsx_main_tpl_file, $vsx_main_file );
 

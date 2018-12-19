@@ -31,12 +31,12 @@
 
 #if defined(MBEDTLS_MD_C)
 
-#include "mbedtls/md.h"
-#include "mbedtls/md_internal.h"
-#include "mbedtls/platform_util.h"
+#include "md.h"
+#include "md_internal.h"
+#include "platform_util.h"
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define mbedtls_calloc    calloc

@@ -1,6 +1,6 @@
 /* BEGIN_HEADER */
-#include "mbedtls/entropy.h"
-#include "mbedtls/ctr_drbg.h"
+#include "entropy.h"
+#include "ctr_drbg.h"
 #include "string.h"
 
 /* Modes for ctr_drbg_validate */

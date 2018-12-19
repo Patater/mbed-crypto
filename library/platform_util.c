@@ -34,8 +34,8 @@
 #include MBEDTLS_CONFIG_FILE
 #endif
 
-#include "mbedtls/platform_util.h"
-#include "mbedtls/threading.h"
+#include "platform_util.h"
+#include "threading.h"
 
 #include <stddef.h>
 #include <string.h>

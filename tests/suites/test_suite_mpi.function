@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/bignum.h"
+#include "bignum.h"
 
 typedef struct mbedtls_test_mpi_random
 {

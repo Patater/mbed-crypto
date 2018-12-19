@@ -1,8 +1,8 @@
 /* BEGIN_HEADER */
-#include "mbedtls/cipher.h"
+#include "cipher.h"
 
 #if defined(MBEDTLS_GCM_C)
-#include "mbedtls/gcm.h"
+#include "gcm.h"
 #endif
 /* END_HEADER */
 

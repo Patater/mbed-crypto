@@ -38,7 +38,7 @@
 
 #include "psa/crypto.h"
 
-#include "mbedtls/entropy.h"
+#include "entropy.h"
 
 /** \brief Configure entropy sources.
  *

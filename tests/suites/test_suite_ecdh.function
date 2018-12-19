@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/ecdh.h"
+#include "ecdh.h"
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES

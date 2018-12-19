@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_exit       exit
@@ -46,38 +46,38 @@ int main( void )
 #include <string.h>
 #include <stdlib.h>
 
-#include "mbedtls/timing.h"
+#include "timing.h"
 
-#include "mbedtls/md4.h"
-#include "mbedtls/md5.h"
-#include "mbedtls/ripemd160.h"
-#include "mbedtls/sha1.h"
-#include "mbedtls/sha256.h"
-#include "mbedtls/sha512.h"
+#include "md4.h"
+#include "md5.h"
+#include "ripemd160.h"
+#include "sha1.h"
+#include "sha256.h"
+#include "sha512.h"
 
-#include "mbedtls/arc4.h"
-#include "mbedtls/des.h"
-#include "mbedtls/aes.h"
-#include "mbedtls/aria.h"
-#include "mbedtls/blowfish.h"
-#include "mbedtls/camellia.h"
-#include "mbedtls/chacha20.h"
-#include "mbedtls/gcm.h"
-#include "mbedtls/ccm.h"
-#include "mbedtls/chachapoly.h"
-#include "mbedtls/cmac.h"
-#include "mbedtls/poly1305.h"
+#include "arc4.h"
+#include "des.h"
+#include "aes.h"
+#include "aria.h"
+#include "blowfish.h"
+#include "camellia.h"
+#include "chacha20.h"
+#include "gcm.h"
+#include "ccm.h"
+#include "chachapoly.h"
+#include "cmac.h"
+#include "poly1305.h"
 
-#include "mbedtls/havege.h"
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/hmac_drbg.h"
+#include "havege.h"
+#include "ctr_drbg.h"
+#include "hmac_drbg.h"
 
-#include "mbedtls/rsa.h"
-#include "mbedtls/dhm.h"
-#include "mbedtls/ecdsa.h"
-#include "mbedtls/ecdh.h"
+#include "rsa.h"
+#include "dhm.h"
+#include "ecdsa.h"
+#include "ecdh.h"
 
-#include "mbedtls/error.h"
+#include "error.h"
 
 #if defined(MBEDTLS_MEMORY_BUFFER_ALLOC_C)
 #include "mbedtls/memory_buffer_alloc.h"
