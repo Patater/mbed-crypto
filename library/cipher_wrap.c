@@ -73,10 +73,6 @@
 #include "mbedtls/ccm.h"
 #endif
 
-#if defined(MBEDTLS_CIPHER_NULL_CIPHER)
-#include <string.h>
-#endif
-
 #if defined(MBEDTLS_PLATFORM_C)
 #include "mbedtls/platform.h"
 #else
@@ -2050,75 +2046,6 @@ static const mbedtls_cipher_info_t chachapoly_info = {
 };
 #endif /* MBEDTLS_CHACHAPOLY_C */
 
-#if defined(MBEDTLS_CIPHER_NULL_CIPHER)
-static int null_crypt_stream( void *ctx, size_t length,
-                              const unsigned char *input,
-                              unsigned char *output )
-{
-    ((void) ctx);
-    memmove( output, input, length );
-    return( 0 );
-}
-
-static int null_setkey( void *ctx, const unsigned char *key,
-                        unsigned int key_bitlen )
-{
-    ((void) ctx);
-    ((void) key);
-    ((void) key_bitlen);
-
-    return( 0 );
-}
-
-static void * null_ctx_alloc( void )
-{
-    return( (void *) 1 );
-}
-
-static void null_ctx_free( void *ctx )
-{
-    ((void) ctx);
-}
-
-static const mbedtls_cipher_base_t null_base_info = {
-    MBEDTLS_CIPHER_ID_NULL,
-    NULL,
-#if defined(MBEDTLS_CIPHER_MODE_CBC)
-    NULL,
-#endif
-#if defined(MBEDTLS_CIPHER_MODE_CFB)
-    NULL,
-#endif
-#if defined(MBEDTLS_CIPHER_MODE_OFB)
-    NULL,
-#endif
-#if defined(MBEDTLS_CIPHER_MODE_CTR)
-    NULL,
-#endif
-#if defined(MBEDTLS_CIPHER_MODE_XTS)
-    NULL,
-#endif
-#if defined(MBEDTLS_CIPHER_MODE_STREAM)
-    null_crypt_stream,
-#endif
-    null_setkey,
-    null_setkey,
-    null_ctx_alloc,
-    null_ctx_free
-};
-
-static const mbedtls_cipher_info_t null_cipher_info = {
-    MBEDTLS_CIPHER_NULL,
-    MBEDTLS_MODE_STREAM,
-    0,
-    "NULL",
-    0,
-    0,
-    1,
-    &null_base_info
-};
-#endif /* defined(MBEDTLS_CIPHER_NULL_CIPHER) */
-
 const mbedtls_cipher_definition_t mbedtls_cipher_definitions[] =
 {
 #if defined(MBEDTLS_AES_C)
@@ -2258,10 +2185,6 @@ const mbedtls_cipher_definition_t mbedtls_cipher_definitions[] =
 #if defined(MBEDTLS_CHACHAPOLY_C)
     { MBEDTLS_CIPHER_CHACHA20_POLY1305,    &chachapoly_info },
 #endif
-
-#if defined(MBEDTLS_CIPHER_NULL_CIPHER)
-    { MBEDTLS_CIPHER_NULL,                 &null_cipher_info },
-#endif /* MBEDTLS_CIPHER_NULL_CIPHER */
 
     { MBEDTLS_CIPHER_NONE, NULL }
 };
