@@ -41,7 +41,7 @@
 use warnings;
 use strict;
 
-my $config_file = "include/mbedtls/config.h";
+my $config_file = "include/mbedcrypto/config.h";
 my $usage = <<EOU;
 $0 [-f <file> | --file <file>] [-o | --force]
                    [set <symbol> <value> | unset <symbol> | get <symbol> |

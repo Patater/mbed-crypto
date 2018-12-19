@@ -26,7 +26,7 @@
 #define MBEDTLS_PLATFORM_UTIL_H
 
 #if !defined(MBEDTLS_CONFIG_FILE)
-#include "mbedtls/config.h"
+#include "mbedcrypto/config.h"
 #else
 #include MBEDTLS_CONFIG_FILE
 #endif
