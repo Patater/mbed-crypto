@@ -212,7 +212,8 @@ check_tools()
 
 check_headers_in_cpp () {
     ls include/mbedtls >headers.txt
-    <programs/test/cpp_dummy_build.cpp sed -n 's/"$//; s!^#include "mbedtls/!!p' |
+    ls include/mbedcrypto >>headers.txt
+    <programs/test/cpp_dummy_build.cpp sed -n 's/"$//; s!^#include "!!p' |
     sort |
     diff headers.txt -
     rm headers.txt
@@ -260,8 +261,8 @@ else
         exit 1
     fi
 
-    if ! git diff-files --quiet include/mbedtls/config.h; then
-        err_msg "Warning - the configuration file 'include/mbedtls/config.h' has been edited. "
+    if ! git diff-files --quiet include/mbedcrypto/config.h; then
+        err_msg "Warning - the configuration file 'include/mbedcrypto/config.h' has been edited. "
         echo "You can either delete or preserve your work, or force the test by rerunning the"
         echo "script as: $0 --force"
         exit 1

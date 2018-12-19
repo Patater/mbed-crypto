@@ -1,5 +1,5 @@
 
-# Also see "include/mbedtls/config.h"
+# Also see "include/mbedcrypto/config.h"
 
 CFLAGS	?= -O2
 WARNING_CFLAGS ?=  -Wall -W -Wdeclaration-after-statement

@@ -52,7 +52,7 @@
  * platform definitions that we'll use in this program. Also include
  * standard C headers for functions we'll use here. */
 #if !defined(MBEDTLS_CONFIG_FILE)
-#include "mbedtls/config.h"
+#include "mbedcrypto/config.h"
 #else
 #include MBEDTLS_CONFIG_FILE
 #endif

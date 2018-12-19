@@ -34,7 +34,7 @@ extern "C" {
 #if defined(MBEDTLS_CONFIG_FILE)
 #include MBEDTLS_CONFIG_FILE
 #else
-#include "mbedtls/config.h"
+#include "mbedcrypto/config.h"
 #endif
 
 #include "psa/crypto.h"
