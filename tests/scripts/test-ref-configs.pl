@@ -75,30 +75,6 @@ while( my ($conf, $data) = each %configs ) {
 
     system( "CFLAGS='-Os -Werror -Wall -Wextra' make" ) and abort "Failed to build: $conf\n";
     system( "make test" ) and abort "Failed test suite: $conf\n";
-
-    my $compat = $data->{'compat'};
-    if( $compat )
-    {
-        print "\nrunning compat.sh $compat\n";
-        system( "tests/compat.sh $compat" )
-            and abort "Failed compat.sh: $conf\n";
-    }
-    else
-    {
-        print "\nskipping compat.sh\n";
-    }
-
-    my $opt = $data->{'opt'};
-    if( $opt )
-    {
-        print "\nrunning ssl-opt.sh $opt\n";
-        system( "tests/ssl-opt.sh $opt" )
-            and abort "Failed ssl-opt.sh: $conf\n";
-    }
-    else
-    {
-        print "\nskipping ssl-opt.sh\n";
-    }
 }
 
 system( "mv $config_h.bak $config_h" ) and warn "$config_h not restored\n";
