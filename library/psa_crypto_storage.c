@@ -22,7 +22,7 @@
 #if defined(MBEDTLS_CONFIG_FILE)
 #include MBEDTLS_CONFIG_FILE
 #else
-#include "mbedtls/config.h"
+#include "mbedcrypto/config.h"
 #endif
 
 #if defined(MBEDTLS_PSA_CRYPTO_STORAGE_C)
