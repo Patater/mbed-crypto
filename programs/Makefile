@@ -46,27 +46,41 @@ ifdef ZLIB
 LOCAL_LDFLAGS += -lz
 endif
 
-APPS =	aes/aescrypt2$(EXEXT)		aes/crypt_and_hash$(EXEXT)	\
-	hash/hello$(EXEXT)		hash/generic_sum$(EXEXT)	\
-	pkey/dh_genprime$(EXEXT)					\
-	pkey/ecdh_curve25519$(EXEXT)					\
-	pkey/ecdsa$(EXEXT)		pkey/gen_key$(EXEXT)		\
-	pkey/key_app$(EXEXT)		pkey/key_app_writer$(EXEXT)	\
-	pkey/mpi_demo$(EXEXT)		pkey/pk_decrypt$(EXEXT)		\
-	pkey/pk_encrypt$(EXEXT)		pkey/pk_sign$(EXEXT)		\
-	pkey/pk_verify$(EXEXT)		pkey/rsa_genkey$(EXEXT)		\
-	pkey/rsa_decrypt$(EXEXT)	pkey/rsa_encrypt$(EXEXT)	\
-	pkey/rsa_sign$(EXEXT)		pkey/rsa_verify$(EXEXT)		\
-	pkey/rsa_sign_pss$(EXEXT)	pkey/rsa_verify_pss$(EXEXT)	\
-	psa/crypto_examples$(EXEXT)					\
-	psa/key_ladder_demo$(EXEXT)	psa/psa_constant_names$(EXEXT)	\
-					random/gen_entropy$(EXEXT)	\
-	random/gen_random_havege$(EXEXT)				\
-	random/gen_random_ctr_drbg$(EXEXT)				\
-					test/benchmark$(EXEXT)		\
-	test/selftest$(EXEXT)						\
-	test/zeroize$(EXEXT)						\
-	util/pem2der$(EXEXT)		util/strerror$(EXEXT)
+APPS = \
+	aes/aescrypt2$(EXEXT) \
+	aes/crypt_and_hash$(EXEXT) \
+	hash/hello$(EXEXT) \
+	hash/generic_sum$(EXEXT) \
+	pkey/dh_genprime$(EXEXT) \
+	pkey/ecdh_curve25519$(EXEXT) \
+	pkey/ecdsa$(EXEXT) \
+	pkey/gen_key$(EXEXT) \
+	pkey/key_app$(EXEXT) \
+	pkey/key_app_writer$(EXEXT) \
+	pkey/mpi_demo$(EXEXT) \
+	pkey/pk_decrypt$(EXEXT) \
+	pkey/pk_encrypt$(EXEXT) \
+	pkey/pk_sign$(EXEXT) \
+	pkey/pk_verify$(EXEXT) \
+	pkey/rsa_genkey$(EXEXT) \
+	pkey/rsa_decrypt$(EXEXT) \
+	pkey/rsa_encrypt$(EXEXT) \
+	pkey/rsa_sign$(EXEXT) \
+	pkey/rsa_verify$(EXEXT) \
+	pkey/rsa_sign_pss$(EXEXT) \
+	pkey/rsa_verify_pss$(EXEXT) \
+	psa/crypto_examples$(EXEXT) \
+	psa/key_ladder_demo$(EXEXT) \
+	psa/psa_constant_names$(EXEXT) \
+	random/gen_entropy$(EXEXT) \
+	random/gen_random_havege$(EXEXT) \
+	random/gen_random_ctr_drbg$(EXEXT) \
+	test/benchmark$(EXEXT) \
+	test/selftest$(EXEXT) \
+	test/zeroize$(EXEXT) \
+	util/pem2der$(EXEXT) \
+	util/strerror$(EXEXT) \
+# End of APPS
 
 ifdef TEST_CPP
 APPS += test/cpp_dummy_build$(EXEXT)
