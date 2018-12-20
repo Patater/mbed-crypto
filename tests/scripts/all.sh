@@ -262,8 +262,8 @@ else
         exit 1
     fi
 
-    if ! git diff-files --quiet include/mbedtls/config.h; then
-        err_msg "Warning - the configuration file 'include/mbedtls/config.h' has been edited. "
+    if ! git diff-files --quiet include/mbedcrypto/config.h; then
+        err_msg "Warning - the configuration file 'include/mbedcrypto/config.h' has been edited. "
         echo "You can either delete or preserve your work, or force the test by rerunning the"
         echo "script as: $0 --force"
         exit 1
