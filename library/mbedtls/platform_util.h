@@ -33,7 +33,7 @@
 
 #include <stddef.h>
 #if defined(MBEDTLS_HAVE_TIME_DATE)
-#include "mbedtls/platform_time.h"
+#include "platform_time.h"
 #include <time.h>
 #endif /* MBEDTLS_HAVE_TIME_DATE */
 
