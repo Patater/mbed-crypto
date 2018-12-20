@@ -353,13 +353,13 @@ class ParseUntilPattern(TestCase):
 
         :return:
         """
-        data = '''#include "mbedtls/ecp.h"
+        data = '''#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 /* END_HEADER */
 '''
         expected = '''#line 1 "test_suite_ut.function"
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 '''
@@ -373,14 +373,14 @@ class ParseUntilPattern(TestCase):
 
         :return:
         """
-        data = '''#include "mbedtls/ecp.h"
+        data = '''#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 /* END_HEADER */
 '''
         offset_line_no = 5
         expected = '''#line %d "test_suite_ut.function"
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 ''' % (offset_line_no + 1)
@@ -395,7 +395,7 @@ class ParseUntilPattern(TestCase):
         missing.
         :return:
         """
-        data = '''#include "mbedtls/ecp.h"
+        data = '''#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 
@@ -796,7 +796,7 @@ class ParseFunction(TestCase):
             raise Exception
         parse_until_pattern_mock.side_effect = stop
         data = '''/* BEGIN_HEADER */
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 /* END_HEADER */
@@ -917,7 +917,7 @@ void print_hello_world()
         :return:
         """
         data = '''/* BEGIN_HEADER */
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 /* END_HEADER */
@@ -963,7 +963,7 @@ void func2()
         self.assertEqual(dispatch_code, expected_dispatch_code)
         expected_func_code = '''#if defined(MBEDTLS_ECP_C)
 #line 2 "test_suite_ut.function"
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 #if defined(MBEDTLS_ENTROPY_NV_SEED)
@@ -1012,7 +1012,7 @@ void test_func2_wrapper( void ** params )
         :return:
         """
         data = '''/* BEGIN_HEADER */
-#include "mbedtls/ecp.h"
+#include "ecp.h"
 
 #define ECP_PF_UNKNOWN     -1
 /* END_HEADER */

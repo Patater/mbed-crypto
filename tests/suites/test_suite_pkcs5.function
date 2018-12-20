@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/pkcs5.h"
+#include "pkcs5.h"
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES

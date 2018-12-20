@@ -5,9 +5,9 @@
 #include "spm/psa_defs.h"
 #endif
 
-#include "mbedtls/asn1.h"
-#include "mbedtls/asn1write.h"
-#include "mbedtls/oid.h"
+#include "asn1.h"
+#include "asn1write.h"
+#include "oid.h"
 
 #include "psa/crypto.h"
 

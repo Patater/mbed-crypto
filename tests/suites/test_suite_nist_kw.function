@@ -1,5 +1,5 @@
 /* BEGIN_HEADER */
-#include "mbedtls/nist_kw.h"
+#include "nist_kw.h"
 /* END_HEADER */
 
 /* BEGIN_DEPENDENCIES
