@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,13 +37,13 @@
 
 #if defined(MBEDTLS_PK_WRITE_C) && defined(MBEDTLS_FS_IO) && \
     defined(MBEDTLS_ENTROPY_C) && defined(MBEDTLS_CTR_DRBG_C)
-#include "mbedtls/error.h"
-#include "mbedtls/pk.h"
-#include "mbedtls/ecdsa.h"
-#include "mbedtls/rsa.h"
-#include "mbedtls/error.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/ctr_drbg.h"
+#include "error.h"
+#include "pk.h"
+#include "ecdsa.h"
+#include "rsa.h"
+#include "error.h"
+#include "entropy.h"
+#include "ctr_drbg.h"
 
 #include <stdio.h>
 #include <stdlib.h>

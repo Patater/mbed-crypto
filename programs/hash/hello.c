@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,7 +36,7 @@
 #endif
 
 #if defined(MBEDTLS_MD5_C)
-#include "mbedtls/md5.h"
+#include "md5.h"
 #endif
 
 #if !defined(MBEDTLS_MD5_C)

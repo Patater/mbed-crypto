@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,10 +37,10 @@
 
 #if defined(MBEDTLS_ECDSA_C) && \
     defined(MBEDTLS_ENTROPY_C) && defined(MBEDTLS_CTR_DRBG_C)
-#include "mbedtls/entropy.h"
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/ecdsa.h"
-#include "mbedtls/sha256.h"
+#include "entropy.h"
+#include "ctr_drbg.h"
+#include "ecdsa.h"
+#include "sha256.h"
 
 #include <string.h>
 #endif

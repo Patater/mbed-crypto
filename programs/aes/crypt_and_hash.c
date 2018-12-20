@@ -32,7 +32,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,9 +44,9 @@
 
 #if defined(MBEDTLS_CIPHER_C) && defined(MBEDTLS_MD_C) && \
  defined(MBEDTLS_FS_IO)
-#include "mbedtls/cipher.h"
-#include "mbedtls/md.h"
-#include "mbedtls/platform_util.h"
+#include "cipher.h"
+#include "md.h"
+#include "platform_util.h"
 
 #include <stdio.h>
 #include <stdlib.h>

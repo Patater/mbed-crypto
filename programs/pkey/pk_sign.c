@@ -26,7 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,11 +50,11 @@ int main( void )
 }
 #else
 
-#include "mbedtls/error.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/md.h"
-#include "mbedtls/pk.h"
+#include "error.h"
+#include "entropy.h"
+#include "ctr_drbg.h"
+#include "md.h"
+#include "pk.h"
 
 #include <stdio.h>
 #include <string.h>

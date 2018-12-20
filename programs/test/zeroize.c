@@ -38,7 +38,7 @@
 #include <stdio.h>
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define mbedtls_printf     printf
@@ -46,7 +46,7 @@
 #define MBEDTLS_EXIT_FAILURE EXIT_FAILURE
 #endif
 
-#include "mbedtls/platform_util.h"
+#include "platform_util.h"
 
 #define BUFFER_LEN 1024
 
