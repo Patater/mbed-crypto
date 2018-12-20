@@ -27,12 +27,12 @@
 
 #if defined(MBEDTLS_ASN1_WRITE_C)
 
-#include "mbedtls/asn1write.h"
+#include "asn1write.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #define mbedtls_calloc    calloc

@@ -37,18 +37,18 @@
 
 #if defined(MBEDTLS_PKCS5_C)
 
-#include "mbedtls/pkcs5.h"
+#include "pkcs5.h"
 
 #if defined(MBEDTLS_ASN1_PARSE_C)
-#include "mbedtls/asn1.h"
-#include "mbedtls/cipher.h"
-#include "mbedtls/oid.h"
+#include "asn1.h"
+#include "cipher.h"
+#include "oid.h"
 #endif /* MBEDTLS_ASN1_PARSE_C */
 
 #include <string.h>
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf

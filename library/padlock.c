@@ -33,7 +33,7 @@
 
 #if defined(MBEDTLS_PADLOCK_C)
 
-#include "mbedtls/padlock.h"
+#include "padlock.h"
 
 #include <string.h>
 

@@ -31,15 +31,15 @@
 
 #if defined(MBEDTLS_CHACHA20_C)
 
-#include "mbedtls/chacha20.h"
-#include "mbedtls/platform_util.h"
+#include "chacha20.h"
+#include "platform_util.h"
 
 #include <stddef.h>
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf

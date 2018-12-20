@@ -27,14 +27,14 @@
 
 #if defined(MBEDTLS_XTEA_C)
 
-#include "mbedtls/xtea.h"
-#include "mbedtls/platform_util.h"
+#include "xtea.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf

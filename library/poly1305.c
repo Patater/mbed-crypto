@@ -28,14 +28,14 @@
 
 #if defined(MBEDTLS_POLY1305_C)
 
-#include "mbedtls/poly1305.h"
-#include "mbedtls/platform_util.h"
+#include "poly1305.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf

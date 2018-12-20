@@ -32,7 +32,7 @@
 #include "psa_prot_internal_storage.h"
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #endif
 
 static psa_status_t its_to_psa_error( psa_its_status_t ret )

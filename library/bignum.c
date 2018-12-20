@@ -43,14 +43,14 @@
 
 #if defined(MBEDTLS_BIGNUM_C)
 
-#include "mbedtls/bignum.h"
-#include "mbedtls/bn_mul.h"
-#include "mbedtls/platform_util.h"
+#include "bignum.h"
+#include "bn_mul.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #include <stdlib.h>

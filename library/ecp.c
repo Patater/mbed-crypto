@@ -49,16 +49,16 @@
 
 #if defined(MBEDTLS_ECP_C)
 
-#include "mbedtls/ecp.h"
-#include "mbedtls/threading.h"
-#include "mbedtls/platform_util.h"
+#include "ecp.h"
+#include "threading.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if !defined(MBEDTLS_ECP_ALT)
 
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdlib.h>
 #include <stdio.h>
@@ -67,7 +67,7 @@
 #define mbedtls_free       free
 #endif
 
-#include "mbedtls/ecp_internal.h"
+#include "ecp_internal.h"
 
 #if ( defined(__ARMCC_VERSION) || defined(_MSC_VER) ) && \
     !defined(inline) && !defined(__cplusplus)

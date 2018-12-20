@@ -33,14 +33,14 @@
 
 #if defined(MBEDTLS_DES_C)
 
-#include "mbedtls/des.h"
-#include "mbedtls/platform_util.h"
+#include "des.h"
+#include "platform_util.h"
 
 #include <string.h>
 
 #if defined(MBEDTLS_SELF_TEST)
 #if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
+#include "platform.h"
 #else
 #include <stdio.h>
 #define mbedtls_printf printf
