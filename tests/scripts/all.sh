@@ -212,6 +212,7 @@ check_tools()
 
 check_headers_in_cpp () {
     ls include/mbedtls >headers.txt
+    ls include/psa >>headers.txt
     ls include/mbedcrypto >>headers.txt
     <programs/test/cpp_dummy_build.cpp sed -n 's/"$//; s!^#include "!!p' |
     sort |
