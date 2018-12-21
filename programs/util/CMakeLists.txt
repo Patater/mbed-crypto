@@ -4,9 +4,13 @@ set(libs
 
 add_executable(strerror strerror.c)
 target_link_libraries(strerror ${libs})
+target_include_directories(strerror
+    PRIVATE ${CMAKE_SOURCE_DIR}/library/include/)
 
 add_executable(pem2der pem2der.c)
 target_link_libraries(pem2der ${libs})
+target_include_directories(pem2der
+    PRIVATE ${CMAKE_SOURCE_DIR}/library/include/)
 
 install(TARGETS strerror pem2der
         DESTINATION "bin"
