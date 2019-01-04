@@ -1215,10 +1215,49 @@ psa_status_t psa_mac_abort(psa_mac_operation_t *operation);
 
 /** The type of the state data structure for multipart cipher operations.
  *
+ * Before calling any function on a cipher operation object, the application
+ * must initialize it by any of the following means:
+ * - Set the structure to all-bits-zero, for example:
+ *   \code
+ *   psa_cipher_operation_t operation;
+ *   memset(&operation, 0, sizeof(operation));
+ *   \endcode
+ * - Initialize the structure to logical zero values, for example:
+ *   \code
+ *   psa_cipher_operation_t operation = {0};
+ *   \endcode
+ * - Initialize the structure to the initializer #PSA_CIPHER_OPERATION_INIT,
+ *   for example:
+ *   \code
+ *   psa_cipher_operation_t operation = PSA_CIPHER_OPERATION_INIT;
+ *   \endcode
+ * - Assign the result of the function psa_cipher_operation_init()
+ *   to the structure, for example:
+ *   \code
+ *   psa_cipher_operation_t operation;
+ *   operation = psa_cipher_operation_init();
+ *   \endcode
+ *
  * This is an implementation-defined \c struct. Applications should not
  * make any assumptions about the content of this structure except
  * as directed by the documentation of a specific implementation. */
 typedef struct psa_cipher_operation_s psa_cipher_operation_t;
+
+/** \def PSA_CIPHER_OPERATION_INIT
+ *
+ * This macro returns a suitable initializer for a cipher operation object of
+ * type #psa_cipher_operation_t.
+ */
+#ifdef __DOXYGEN_ONLY__
+/* This is an example definition for documentation purposes.
+ * Implementations should define a suitable value in `crypto_struct.h`.
+ */
+#define PSA_CIPHER_OPERATION_INIT {0}
+#endif
+
+/** Return an initial value for a cipher operation object.
+ */
+static psa_cipher_operation_t psa_cipher_operation_init(void);
 
 /** Set the key for a multipart symmetric encryption operation.
  *
@@ -1238,7 +1277,7 @@ typedef struct psa_cipher_operation_s psa_cipher_operation_t;
  * -# Call psa_cipher_finish().
  *
  * The application may call psa_cipher_abort() at any time after the operation
- * has been initialized with psa_cipher_encrypt_setup().
+ * has been initialized.
  *
  * After a successful call to psa_cipher_encrypt_setup(), the application must
  * eventually terminate the operation. The following events terminate an
@@ -1293,7 +1332,7 @@ psa_status_t psa_cipher_encrypt_setup(psa_cipher_operation_t *operation,
  * -# Call psa_cipher_finish().
  *
  * The application may call psa_cipher_abort() at any time after the operation
- * has been initialized with psa_cipher_decrypt_setup().
+ * has been initialized.
  *
  * After a successful call to psa_cipher_decrypt_setup(), the application must
  * eventually terminate the operation. The following events terminate an

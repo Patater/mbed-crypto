@@ -63,3 +63,6 @@ hash_operation_init:
 
 MAC operation object initializers zero properly
 mac_operation_init:
+
+Cipher operation object initializers zero properly
+cipher_operation_init:
