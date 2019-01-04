@@ -66,3 +66,6 @@ mac_operation_init:
 
 Cipher operation object initializers zero properly
 cipher_operation_init:
+
+Crypto generator initializers zero properly
+crypto_generator_init:

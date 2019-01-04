@@ -338,3 +338,17 @@ void cipher_operation_init()
     TEST_EQUAL(memcmp(&init, &zero, sizeof(zero)), 0);
 }
 /* END_CASE */
+
+/* BEGIN_CASE depends_on:MBEDTLS_PSA_CRYPTO_C */
+void crypto_generator_init()
+{
+    psa_crypto_generator_t func = psa_crypto_generator_init();
+    psa_crypto_generator_t init = PSA_CRYPTO_GENERATOR_INIT;
+    psa_crypto_generator_t zero;
+
+    memset(&zero, 0, sizeof(zero));
+
+    TEST_EQUAL(memcmp(&func, &zero, sizeof(zero)), 0);
+    TEST_EQUAL(memcmp(&init, &zero, sizeof(zero)), 0);
+}
+/* END_CASE */
