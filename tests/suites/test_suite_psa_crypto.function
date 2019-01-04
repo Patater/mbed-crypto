@@ -1768,7 +1768,7 @@ void hash_setup( int alg_arg,
 {
     psa_algorithm_t alg = alg_arg;
     psa_status_t expected_status = expected_status_arg;
-    psa_hash_operation_t operation;
+    psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
     psa_status_t status;
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -1792,7 +1792,7 @@ void hash_bad_order( )
         0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
         0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55 };
     size_t hash_len;
-    psa_hash_operation_t operation;
+    psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -1828,7 +1828,7 @@ void hash_verify_bad_args( )
         0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
         0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55, 0xaa, 0xbb };
     size_t expected_size = PSA_HASH_SIZE( alg );
-    psa_hash_operation_t operation;
+    psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
@@ -1858,7 +1858,7 @@ void hash_finish_bad_args( )
     psa_algorithm_t alg = PSA_ALG_SHA_256;
     unsigned char hash[PSA_HASH_MAX_SIZE];
     size_t expected_size = PSA_HASH_SIZE( alg );
-    psa_hash_operation_t operation;
+    psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
     size_t hash_len;
 
     PSA_ASSERT( psa_crypto_init( ) );

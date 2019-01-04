@@ -296,3 +296,17 @@ void key_policy_init()
     TEST_EQUAL(memcmp(&init, &zero, sizeof(zero)), 0);
 }
 /* END_CASE */
+
+/* BEGIN_CASE depends_on:MBEDTLS_PSA_CRYPTO_C */
+void hash_operation_init()
+{
+    psa_hash_operation_t func = psa_hash_operation_init();
+    psa_hash_operation_t init = PSA_HASH_OPERATION_INIT;
+    psa_hash_operation_t zero;
+
+    memset(&zero, 0, sizeof(zero));
+
+    TEST_EQUAL(memcmp(&func, &zero, sizeof(zero)), 0);
+    TEST_EQUAL(memcmp(&init, &zero, sizeof(zero)), 0);
+}
+/* END_CASE */

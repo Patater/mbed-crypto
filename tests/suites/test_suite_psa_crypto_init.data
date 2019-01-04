@@ -57,3 +57,6 @@ create_nv_seed:
 
 Key policy initializers zero properly
 key_policy_init:
+
+Hash operation object initializers zero properly
+hash_operation_init:
