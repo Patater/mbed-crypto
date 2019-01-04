@@ -60,3 +60,6 @@ key_policy_init:
 
 Hash operation object initializers zero properly
 hash_operation_init:
+
+MAC operation object initializers zero properly
+mac_operation_init:

@@ -310,3 +310,17 @@ void hash_operation_init()
     TEST_EQUAL(memcmp(&init, &zero, sizeof(zero)), 0);
 }
 /* END_CASE */
+
+/* BEGIN_CASE depends_on:MBEDTLS_PSA_CRYPTO_C */
+void mac_operation_init()
+{
+    psa_mac_operation_t func = psa_mac_operation_init();
+    psa_mac_operation_t init = PSA_MAC_OPERATION_INIT;
+    psa_mac_operation_t zero;
+
+    memset(&zero, 0, sizeof(zero));
+
+    TEST_EQUAL(memcmp(&func, &zero, sizeof(zero)), 0);
+    TEST_EQUAL(memcmp(&init, &zero, sizeof(zero)), 0);
+}
+/* END_CASE */
