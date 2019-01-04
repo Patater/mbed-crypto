@@ -54,3 +54,6 @@ entropy_from_nv_seed:ENTROPY_MIN_NV_SEED_SIZE:PSA_SUCCESS
 
 Recreate NV seed file
 create_nv_seed:
+
+Key policy initializers zero properly
+key_policy_init:
