@@ -467,9 +467,9 @@ psa_status_t psa_export_key(psa_key_handle_t handle,
  * The output of this function can be passed to psa_import_key() to
  * create an object that is equivalent to the public key.
  *
- * The format is the DER representation defined by RFC 5280 as
- * `SubjectPublicKeyInfo`, with the `subjectPublicKey` format
- * specified below.
+ * For non-RSA public keys, the format is the DER representation defined by RFC
+ * 5280 as `SubjectPublicKeyInfo`, with the `subjectPublicKey` format specified
+ * below.
  * ```
  * SubjectPublicKeyInfo  ::=  SEQUENCE  {
  *      algorithm          AlgorithmIdentifier,
@@ -480,15 +480,8 @@ psa_status_t psa_export_key(psa_key_handle_t handle,
  * ```
  *
  * - For RSA public keys (#PSA_KEY_TYPE_RSA_PUBLIC_KEY),
- *   the `subjectPublicKey` format is defined by RFC 3279 &sect;2.3.1 as
- *   `RSAPublicKey`,
- *   with the OID `rsaEncryption`,
- *   and with the parameters `NULL`.
+ *   the `RSAPublicKey` format is defined by RFC 3279 &sect;2.3.1.
  *   ```
- *   pkcs-1 OBJECT IDENTIFIER ::= { iso(1) member-body(2) us(840)
- *                                  rsadsi(113549) pkcs(1) 1 }
- *   rsaEncryption OBJECT IDENTIFIER ::=  { pkcs-1 1 }
- *
  *   RSAPublicKey ::= SEQUENCE {
  *      modulus            INTEGER,    -- n
  *      publicExponent     INTEGER  }  -- e
