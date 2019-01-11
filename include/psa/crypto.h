@@ -370,6 +370,26 @@ psa_status_t psa_get_key_information(psa_key_handle_t handle,
                                      size_t *bits);
 
 /**
+ *
+ * Format for the domain parameters varies by the key type.
+ * Must call before import key. If you want, you can call before generate key
+ * or use extra to pass the domain parameters.
+ *
+ * Bad state error if called after imported or generated key already.
+ */
+psa_status_t psa_set_key_domain_parameters(uint8_t *data,
+                                           size_t data_size,
+                                           size_t data_length);
+
+/**
+ *
+ * It gets the domain parameters. 8-)
+ */
+psa_status_t psa_get_key_domain_parameters(uint8_t *data,
+                                           size_t data_size,
+                                           size_t *data_length);
+
+/**
  * \brief Export a key in binary format.
  *
  * The output of this function can be passed to psa_import_key() to
