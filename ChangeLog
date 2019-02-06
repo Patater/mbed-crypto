@@ -6,7 +6,7 @@ Changes
    * Add unit tests for AES-GCM when called through mbedtls_cipher_auth_xxx()
      from the cipher abstraction layer. Fixes #2198.
 
-= mbed TLS 2.16.0 branch released xxxx-xx-xx
+= mbed TLS 2.14.0+01b34fb316a5 branch released xxxx-xx-xx
 
 Security
    * Fix timing variations and memory access variations in RSA PKCS#1 v1.5
