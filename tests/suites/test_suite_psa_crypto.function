@@ -3206,7 +3206,7 @@ void asymmetric_decrypt( int key_type_arg,
     size_t output_length = ~0;
     psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
 
-    output_size = key_data->len;
+    output_size = expected_data->len;
     ASSERT_ALLOC( output, output_size );
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -3258,6 +3258,7 @@ void asymmetric_decrypt_fail( int key_type_arg,
                               int alg_arg,
                               data_t *input_data,
                               data_t *label,
+                              int expected_output_size,
                               int expected_status_arg  )
 {
     psa_key_handle_t handle = 0;
@@ -3270,7 +3271,7 @@ void asymmetric_decrypt_fail( int key_type_arg,
     psa_status_t expected_status = expected_status_arg;
     psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
 
-    output_size = key_data->len;
+    output_size = expected_output_size;
     ASSERT_ALLOC( output, output_size );
 
     PSA_ASSERT( psa_crypto_init( ) );
@@ -3289,7 +3290,7 @@ void asymmetric_decrypt_fail( int key_type_arg,
                                             output, output_size,
                                             &output_length );
     TEST_EQUAL( actual_status, expected_status );
-    TEST_ASSERT( output_length <= output_size );
+    TEST_ASSERT( output_length == output_size );
 
     /* If the label is empty, the test framework puts a non-null pointer
      * in label->x. Test that a null pointer works as well. */
