@@ -3075,6 +3075,13 @@ psa_status_t psa_cipher_update( psa_cipher_operation_t *operation,
     psa_status_t status;
     int ret;
     size_t expected_output_size;
+
+    if( operation->alg == 0)
+    {
+        status = PSA_ERROR_BAD_STATE;
+        goto exit;
+    }
+
     if( ! PSA_ALG_IS_STREAM_CIPHER( operation->alg ) )
     {
         /* Take the unprocessed partial block left over from previous

@@ -2345,6 +2345,9 @@ exit:
 /* BEGIN_CASE */
 void cipher_operation_init( )
 {
+    const uint8_t input[1];
+    unsigned char output[1];
+    size_t output_length;
     /* Test each valid way of initializing the object, except for `= {0}`, as
      * Clang 5 complains when `-Wmissing-field-initializers` is used, even
      * though it's OK by the C standard. We could test for this, but we'd need
@@ -2354,6 +2357,23 @@ void cipher_operation_init( )
     psa_cipher_operation_t zero;
 
     memset( &zero, 0, sizeof( zero ) );
+
+    /* A default cipher operation should not be usable. */
+    TEST_EQUAL( psa_cipher_update( &func,
+                                   input, sizeof( input ),
+                                   output, sizeof( output ),
+                                   &output_length ),
+                PSA_ERROR_BAD_STATE );
+    TEST_EQUAL( psa_cipher_update( &init,
+                                   input, sizeof( input ),
+                                   output, sizeof( output ),
+                                   &output_length ),
+                PSA_ERROR_BAD_STATE );
+    TEST_EQUAL( psa_cipher_update( &zero,
+                                   input, sizeof( input ),
+                                   output, sizeof( output ),
+                                   &output_length ),
+                PSA_ERROR_BAD_STATE );
 
     /* A default cipher operation should be abortable without error. */
     PSA_ASSERT( psa_cipher_abort( &func ) );
