@@ -2168,6 +2168,8 @@ exit:
 /* BEGIN_CASE */
 void mac_operation_init( )
 {
+    const uint8_t input[1];
+
     /* Test each valid way of initializing the object, except for `= {0}`, as
      * Clang 5 complains when `-Wmissing-field-initializers` is used, even
      * though it's OK by the C standard. We could test for this, but we'd need
@@ -2177,6 +2179,17 @@ void mac_operation_init( )
     psa_mac_operation_t zero;
 
     memset( &zero, 0, sizeof( zero ) );
+
+    /* A default MAC operation should not be usable. */
+    TEST_EQUAL( psa_mac_update( &func,
+                                input, sizeof( input ) ),
+                PSA_ERROR_BAD_STATE );
+    TEST_EQUAL( psa_mac_update( &init,
+                                input, sizeof( input ) ),
+                PSA_ERROR_BAD_STATE );
+    TEST_EQUAL( psa_mac_update( &zero,
+                                input, sizeof( input ) ),
+                PSA_ERROR_BAD_STATE );
 
     /* A default MAC operation should be abortable without error. */
     PSA_ASSERT( psa_mac_abort( &func ) );
@@ -2236,9 +2249,11 @@ void mac_sign( int key_type_arg,
      * test, we'll check that the implementation didn't overwrite onto
      * this extra room. */
     uint8_t actual_mac[PSA_MAC_MAX_SIZE + 10];
+    uint8_t dummy_mac[PSA_MAC_MAX_SIZE + 10];
     size_t mac_buffer_size =
         PSA_MAC_FINAL_SIZE( key_type, PSA_BYTES_TO_BITS( key->len ), alg );
     size_t mac_length = 0;
+    size_t dummy_mac_length = 0;
 
     memset( actual_mac, '+', sizeof( actual_mac ) );
     TEST_ASSERT( mac_buffer_size <= PSA_MAC_MAX_SIZE );
@@ -2261,6 +2276,12 @@ void mac_sign( int key_type_arg,
     PSA_ASSERT( psa_mac_sign_finish( &operation,
                                      actual_mac, mac_buffer_size,
                                      &mac_length ) );
+
+    /* Ensure double sign fails properly. */
+    TEST_EQUAL( psa_mac_sign_finish( &operation,
+                                     dummy_mac, mac_buffer_size,
+                                     &dummy_mac_length ),
+                PSA_ERROR_BAD_STATE );
 
     /* Compare with the expected value. */
     ASSERT_COMPARE( expected_mac->x, expected_mac->len,
@@ -2308,6 +2329,12 @@ void mac_verify( int key_type_arg,
     PSA_ASSERT( psa_mac_verify_finish( &operation,
                                        expected_mac->x,
                                        expected_mac->len ) );
+
+    /* Ensure double verify fails properly. */
+    TEST_EQUAL( psa_mac_verify_finish( &operation,
+                                        expected_mac->x,
+                                        expected_mac->len ),
+                PSA_ERROR_BAD_STATE );
 
 exit:
     psa_destroy_key( handle );
