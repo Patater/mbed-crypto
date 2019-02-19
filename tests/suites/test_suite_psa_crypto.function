@@ -1999,29 +1999,76 @@ exit:
 /* BEGIN_CASE */
 void hash_bad_order( )
 {
+    psa_algorithm_t alg = PSA_ALG_SHA_256;
     unsigned char input[] = "";
     /* SHA-256 hash of an empty string */
-    unsigned char hash[] = {
+    const unsigned char valid_hash[] = {
         0xe3, 0xb0, 0xc4, 0x42, 0x98, 0xfc, 0x1c, 0x14, 0x9a, 0xfb, 0xf4, 0xc8,
         0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
         0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55 };
+    unsigned char hash[sizeof(valid_hash)] = { 0 };
     size_t hash_len;
     psa_hash_operation_t operation = PSA_HASH_OPERATION_INIT;
 
     PSA_ASSERT( psa_crypto_init( ) );
 
-    /* psa_hash_update without calling psa_hash_setup beforehand */
+    /* Call update without calling setup beforehand. */
     memset( &operation, 0, sizeof( operation ) );
     TEST_EQUAL( psa_hash_update( &operation, input, sizeof( input ) ),
                 PSA_ERROR_BAD_STATE );
 
-    /* psa_hash_verify without calling psa_hash_setup beforehand */
+    /* Call update after finish. */
     memset( &operation, 0, sizeof( operation ) );
-    TEST_EQUAL( psa_hash_verify( &operation, hash, sizeof( hash ) ),
+    PSA_ASSERT( psa_hash_setup( &operation, alg ) );
+    PSA_ASSERT( psa_hash_finish( &operation,
+                                 hash, sizeof( hash ), &hash_len ) );
+    TEST_EQUAL( psa_hash_update( &operation, input, sizeof( input ) ),
                 PSA_ERROR_BAD_STATE );
 
-    /* psa_hash_finish without calling psa_hash_setup beforehand */
+    /* Call verify without calling setup beforehand. */
     memset( &operation, 0, sizeof( operation ) );
+    TEST_EQUAL( psa_hash_verify( &operation,
+                                 valid_hash, sizeof( valid_hash ) ),
+                PSA_ERROR_BAD_STATE );
+
+    /* Call verify after finish. */
+    memset( &operation, 0, sizeof( operation ) );
+    PSA_ASSERT( psa_hash_setup( &operation, alg ) );
+    PSA_ASSERT( psa_hash_finish( &operation,
+                                 hash, sizeof( hash ), &hash_len ) );
+    TEST_EQUAL( psa_hash_verify( &operation,
+                                 valid_hash, sizeof( valid_hash ) ),
+                PSA_ERROR_BAD_STATE );
+
+    /* Call verify twice in a row. */
+    memset( &operation, 0, sizeof( operation ) );
+    PSA_ASSERT( psa_hash_setup( &operation, alg ) );
+    PSA_ASSERT( psa_hash_verify( &operation,
+                                 valid_hash, sizeof( valid_hash ) ) );
+    TEST_EQUAL( psa_hash_verify( &operation,
+                                 valid_hash, sizeof( valid_hash ) ),
+                PSA_ERROR_BAD_STATE );
+
+    /* Call finish without calling setup beforehand. */
+    memset( &operation, 0, sizeof( operation ) );
+    TEST_EQUAL( psa_hash_finish( &operation,
+                                 hash, sizeof( hash ), &hash_len ),
+                PSA_ERROR_BAD_STATE );
+
+    /* Call finish twice in a row. */
+    memset( &operation, 0, sizeof( operation ) );
+    PSA_ASSERT( psa_hash_setup( &operation, alg ) );
+    PSA_ASSERT( psa_hash_finish( &operation,
+                                 hash, sizeof( hash ), &hash_len ) );
+    TEST_EQUAL( psa_hash_finish( &operation,
+                                 hash, sizeof( hash ), &hash_len ),
+                PSA_ERROR_BAD_STATE );
+
+    /* Call finish after calling verify. */
+    memset( &operation, 0, sizeof( operation ) );
+    PSA_ASSERT( psa_hash_setup( &operation, alg ) );
+    PSA_ASSERT( psa_hash_verify( &operation,
+                                 valid_hash, sizeof( valid_hash ) ) );
     TEST_EQUAL( psa_hash_finish( &operation,
                                  hash, sizeof( hash ), &hash_len ),
                 PSA_ERROR_BAD_STATE );
