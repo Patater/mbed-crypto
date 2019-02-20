@@ -2156,7 +2156,6 @@ psa_status_t psa_mac_update( psa_mac_operation_t *operation,
         return( PSA_ERROR_BAD_STATE );
     }
 
-cleanup:
     if( status != PSA_SUCCESS )
         psa_mac_abort( operation );
     return( status );
@@ -2269,7 +2268,6 @@ psa_status_t psa_mac_sign_finish( psa_mac_operation_t *operation,
 
     status = psa_mac_finish_internal( operation, mac, mac_size );
 
-cleanup:
     if( status == PSA_SUCCESS )
     {
         status = psa_mac_abort( operation );
