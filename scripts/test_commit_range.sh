@@ -21,7 +21,7 @@
 # Check if all commits since a specified commit (not including that commit)
 # build and pass some basic checks.
 
-ORIGIN=origin/development
+ORIGIN=crypto/development
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 STATUS=0
 
