@@ -126,6 +126,37 @@ static psa_status_t psa_internal_allocate_key_slot( psa_key_handle_t *handle )
     return( PSA_ERROR_INSUFFICIENT_MEMORY );
 }
 
+/** Find a free key slot and mark it as in use and in a secure element.
+ *
+ * \param[out] handle   On success, a slot number that is not in use. This
+ *                      value can be used as a handle to the slot.
+ *
+ * \retval #PSA_SUCCESS
+ * \retval #PSA_ERROR_INSUFFICIENT_MEMORY
+ */
+static psa_status_t psa_internal_allocate_se_key_slot( psa_key_handle_t *handle,
+                                                    size_t se_index,
+                                                    psa_key_id_t id,
+                                                    psa_key_type_t type,
+                                                    psa_key_slot_number_t se_slot )
+{
+    for( *handle = PSA_KEY_SLOT_COUNT; *handle != 0; --( *handle ) )
+    {
+        psa_key_slot_t *slot = &global_data.key_slots[*handle - 1];
+        if( ! slot->allocated )
+        {
+            slot->allocated = 1;
+            slot->se = 1;
+            slot->se_index = se_index;
+            slot->persistent_storage_id = id;
+            slot->type = type;
+            slot->se_slot_number = se_slot;
+            return( PSA_ERROR_EMPTY_SLOT );
+        }
+    }
+    return( PSA_ERROR_INSUFFICIENT_MEMORY );
+}
+
 /** Wipe a key slot and mark it as available.
  *
  * This does not affect persistent storage.
@@ -295,6 +326,53 @@ psa_status_t psa_create_key( psa_key_lifetime_t lifetime,
 psa_status_t psa_close_key( psa_key_handle_t handle )
 {
     return( psa_internal_release_key_slot( handle ) );
+}
+
+#define MAX_NUM_SE_SLOTS 16
+psa_se_slot_t se_slots[MAX_NUM_SE_SLOTS];
+
+size_t num_se_slots;
+
+psa_status_t psa_register_se_slot( psa_key_id_t id, psa_key_slot_number_t slot,
+    psa_key_lifetime_t lifetime, psa_key_type_t type, size_t size,
+    uint8_t occupied, int32_t owner )
+{
+    if( num_se_slots == MAX_NUM_SE_SLOTS )
+    {
+        // We've got a real problem here
+        return PSA_ERROR_NOT_SUPPORTED;
+    }
+    for( size_t se_index = 0; se_index < num_secure_elements; se_index++ )
+    {
+        psa_drv_se_info_t *p_this_se = &secure_elements[se_index];
+        if( p_this_se->lifetime == lifetime )
+        {
+            psa_key_handle_t handle;
+            se_slots[num_se_slots].se_index = se_index;
+            se_slots[num_se_slots].lifetime = lifetime;
+            se_slots[num_se_slots].type = type;
+            se_slots[num_se_slots].occupied = occupied;
+            se_slots[num_se_slots].slot = slot;
+            se_slots[num_se_slots].size = size;
+            se_slots[num_se_slots].owner = owner;
+            num_se_slots++;
+            if ( occupied )
+            {
+                psa_status_t alloc_ret = psa_internal_allocate_se_key_slot(
+                    &handle, se_index, id, type, slot );
+                if ( alloc_ret != PSA_ERROR_EMPTY_SLOT )
+                {
+                    return( PSA_ERROR_UNKNOWN_ERROR );
+                }
+            }
+            else
+            {
+                //asdf
+            }
+            return PSA_SUCCESS;
+        }
+    }
+    return PSA_ERROR_NOT_SUPPORTED;
 }
 
 #endif /* MBEDTLS_PSA_CRYPTO_C */
