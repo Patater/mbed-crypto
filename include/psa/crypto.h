@@ -2369,6 +2369,8 @@ psa_status_t psa_generate_key(psa_key_handle_t handle,
 
 /**@}*/
 
+psa_status_t psa_register_secure_element(psa_drv_se_info_t se_info);
+
 #ifdef __cplusplus
 }
 #endif

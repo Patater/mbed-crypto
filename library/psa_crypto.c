@@ -27,6 +27,12 @@
 
 #if defined(MBEDTLS_PSA_CRYPTO_C)
 
+#include "psa/crypto_se_driver.h"
+
+#define MAX_NUM_SECURE_ELEMENTS 3
+psa_drv_se_info_t secure_elements[MAX_NUM_SECURE_ELEMENTS];
+size_t num_secure_elements;
+
 #include "psa_crypto_service_integration.h"
 #include "psa/crypto.h"
 
@@ -91,6 +97,16 @@ static inline int safer_memcmp( const uint8_t *a, const uint8_t *b, size_t n )
     return( diff );
 }
 
+psa_status_t psa_register_secure_element(psa_drv_se_info_t se_info) {
+    printf("psa_register_secure_element called\n");
+    if ((num_secure_elements + 1) >= MAX_NUM_SECURE_ELEMENTS) {
+        printf("stsafe_register returning buffer too small:%lu\n", num_secure_elements);
+        return PSA_ERROR_BUFFER_TOO_SMALL;
+    }
+    secure_elements[num_secure_elements] = se_info;
+    num_secure_elements++;
+    return PSA_SUCCESS;
+}
 
 
 /****************************************************************/

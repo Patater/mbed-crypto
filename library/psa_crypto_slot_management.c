@@ -43,6 +43,11 @@
 #define mbedtls_free   free
 #endif
 
+#include "psa/crypto_se_driver.h"
+
+extern psa_drv_se_info_t secure_elements[];
+extern size_t num_secure_elements;
+
 #define ARRAY_LENGTH( array ) ( sizeof( array ) / sizeof( *( array ) ) )
 
 typedef struct
