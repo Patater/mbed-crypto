@@ -961,6 +961,51 @@ typedef struct {
 
 /**@}*/
 
+/** \brief A struct containing all of the structures and data needed to
+ * register a secure element with a PSA Crypto implementation.
+ */
+typedef struct {
+    /** The lifetime value associated with the secure element */
+    psa_key_lifetime_t lifetime;
+    /** The key management functions for the secure element */
+    psa_drv_se_key_management_t *p_key_management;
+    /** The MAC functions for the secure element */
+    psa_drv_se_mac_t *p_mac;
+    /** The cipher functions for the secure element */
+    psa_drv_se_cipher_t *p_cipher;
+    /** The asymmetric crypto functions for the secure element */
+    psa_drv_se_asymmetric_t *p_asym;
+    /** The AEAD functions for the secure element */
+    psa_drv_se_aead_t *p_aead;
+    /** The key derivation functions for the secure element */
+    psa_drv_se_key_derivation_t *p_derive;
+    /** The minimum of the slot range that the secure element supports */
+    size_t slot_min;
+    /** The maximum of the slot range that the secure element supports */
+    size_t slot_max;
+} psa_drv_se_info_t;
+
+/** \brief a struct containing all of the details a PSA Crypto implementation
+ * needs to know about a secure element slot
+ */
+typedef struct {
+    /** The index of the secure element where the slot is located */
+    uint32_t se_index;
+    /** The lifetime associated with the slot. Should match the lifetime of the
+     * secure element referenced by `se_index` */
+    psa_key_lifetime_t lifetime;
+    /** The key type that the slot supports */
+    psa_key_type_t type;
+    /** 0 - the slot is not occupied. 1 - the slot is occupied */
+    uint8_t occupied;
+    /** The index of the slot inside the secure element */
+    size_t slot;
+    /** The size in bytes of the storage for the slot */
+    size_t size;
+    /** The owning partition of the slot. If 0, the slot is unowned */
+    int32_t owner;
+} psa_se_slot_t;
+
 #ifdef __cplusplus
 }
 #endif
