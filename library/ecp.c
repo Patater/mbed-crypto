@@ -2357,10 +2357,14 @@ int mbedtls_ecp_mul_restartable( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
 #if defined(MBEDTLS_ECP_INTERNAL_ALT)
     char is_grp_capable = 0;
 #endif
+    printf(">%s()\n", __FUNCTION__);
     ECP_VALIDATE_RET( grp != NULL );
     ECP_VALIDATE_RET( R   != NULL );
     ECP_VALIDATE_RET( m   != NULL );
     ECP_VALIDATE_RET( P   != NULL );
+    printf(">PARAM OK\n");
+
+    printf(">");
 
 #if defined(MBEDTLS_ECP_RESTARTABLE)
     /* reset ops count for this call if top-level */
@@ -2378,26 +2382,48 @@ int mbedtls_ecp_mul_restartable( mbedtls_ecp_group *grp, mbedtls_ecp_point *R,
     if( rs_ctx == NULL || rs_ctx->rsm == NULL )
 #endif
     {
+        printf("a");
         /* check_privkey is free */
         MBEDTLS_ECP_BUDGET( MBEDTLS_ECP_OPS_CHK );
+        printf("b");
 
         /* Common sanity checks */
+        printf("c");
+        /* XXX */
+        /* WHy are we checking priv key? We are wanting to do verify, and we
+         * don't have privkey.
+         * hash multiplied by s inverse
+         */
         MBEDTLS_MPI_CHK( mbedtls_ecp_check_privkey( grp, m ) );
+        /* XXX */
+        printf("d");
         MBEDTLS_MPI_CHK( mbedtls_ecp_check_pubkey( grp, P ) );
+        printf("e");
     }
 
+    printf("f");
     ret = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
 #if defined(ECP_MONTGOMERY)
+    printf("g");
     if( mbedtls_ecp_get_type( grp ) == MBEDTLS_ECP_TYPE_MONTGOMERY )
+    {
+        printf("h");
         MBEDTLS_MPI_CHK( ecp_mul_mxz( grp, R, m, P, f_rng, p_rng ) );
+        printf("i");
+    }
 #endif
 #if defined(ECP_SHORTWEIERSTRASS)
     if( mbedtls_ecp_get_type( grp ) == MBEDTLS_ECP_TYPE_SHORT_WEIERSTRASS )
+    {
+        printf("j");
         MBEDTLS_MPI_CHK( ecp_mul_comb( grp, R, m, P, f_rng, p_rng, rs_ctx ) );
+        printf("k");
+    }
 #endif
 
 cleanup:
 
+    printf("l");
 #if defined(MBEDTLS_ECP_INTERNAL_ALT)
     if( is_grp_capable )
         mbedtls_internal_ecp_free( grp );
@@ -2486,21 +2512,33 @@ static int mbedtls_ecp_mul_shortcuts( mbedtls_ecp_group *grp,
                                       mbedtls_ecp_restart_ctx *rs_ctx )
 {
     int ret;
+    printf(">%s()\n", __FUNCTION__);
+    printf(">");
 
     if( mbedtls_mpi_cmp_int( m, 1 ) == 0 )
     {
+        printf("a");
         MBEDTLS_MPI_CHK( mbedtls_ecp_copy( R, P ) );
+        printf("b");
     }
     else if( mbedtls_mpi_cmp_int( m, -1 ) == 0 )
     {
+        printf("c");
         MBEDTLS_MPI_CHK( mbedtls_ecp_copy( R, P ) );
+        printf("d");
         if( mbedtls_mpi_cmp_int( &R->Y, 0 ) != 0 )
+        {
+            printf("e");
             MBEDTLS_MPI_CHK( mbedtls_mpi_sub_mpi( &R->Y, &grp->P, &R->Y ) );
+            printf("f");
+        }
     }
     else
     {
+        printf("g");
         MBEDTLS_MPI_CHK( mbedtls_ecp_mul_restartable( grp, R, m, P,
                                                       NULL, NULL, rs_ctx ) );
+        printf("h");
     }
 
 cleanup:
@@ -2524,17 +2562,21 @@ int mbedtls_ecp_muladd_restartable(
 #if defined(MBEDTLS_ECP_INTERNAL_ALT)
     char is_grp_capable = 0;
 #endif
+    printf(">mbedtls_ecp_muladd_restartable()\n");
     ECP_VALIDATE_RET( grp != NULL );
     ECP_VALIDATE_RET( R   != NULL );
     ECP_VALIDATE_RET( m   != NULL );
     ECP_VALIDATE_RET( P   != NULL );
     ECP_VALIDATE_RET( n   != NULL );
     ECP_VALIDATE_RET( Q   != NULL );
+    printf(">PARAM OK\n");
 
     if( mbedtls_ecp_get_type( grp ) != MBEDTLS_ECP_TYPE_SHORT_WEIERSTRASS )
         return( MBEDTLS_ERR_ECP_FEATURE_UNAVAILABLE );
+    printf(">a");
 
     mbedtls_ecp_point_init( &mP );
+    printf("b");
 
     ECP_RS_ENTER( ma );
 
@@ -2555,40 +2597,61 @@ int mbedtls_ecp_muladd_restartable(
     }
 #endif /* MBEDTLS_ECP_RESTARTABLE */
 
+    printf("c");
+    /* XXX */
     MBEDTLS_MPI_CHK( mbedtls_ecp_mul_shortcuts( grp, pmP, m, P, rs_ctx ) );
+    /* XXX */
+    printf("d");
 #if defined(MBEDTLS_ECP_RESTARTABLE)
     if( rs_ctx != NULL && rs_ctx->ma != NULL )
         rs_ctx->ma->state = ecp_rsma_mul2;
 
 mul2:
 #endif
+    printf("e");
     MBEDTLS_MPI_CHK( mbedtls_ecp_mul_shortcuts( grp, pR,  n, Q, rs_ctx ) );
+    printf("f");
 
 #if defined(MBEDTLS_ECP_INTERNAL_ALT)
     if( ( is_grp_capable = mbedtls_internal_ecp_grp_capable( grp ) ) )
+    {
+        printf("h");
         MBEDTLS_MPI_CHK( mbedtls_internal_ecp_init( grp ) );
+        printf("g");
+    }
 #endif /* MBEDTLS_ECP_INTERNAL_ALT */
 
 #if defined(MBEDTLS_ECP_RESTARTABLE)
+    printf("i");
     if( rs_ctx != NULL && rs_ctx->ma != NULL )
         rs_ctx->ma->state = ecp_rsma_add;
 
 add:
 #endif
+    printf("j");
     MBEDTLS_ECP_BUDGET( MBEDTLS_ECP_OPS_ADD );
+    printf("k");
     MBEDTLS_MPI_CHK( ecp_add_mixed( grp, pR, pmP, pR ) );
+    printf("l");
 #if defined(MBEDTLS_ECP_RESTARTABLE)
     if( rs_ctx != NULL && rs_ctx->ma != NULL )
         rs_ctx->ma->state = ecp_rsma_norm;
 
 norm:
 #endif
+    printf("m");
     MBEDTLS_ECP_BUDGET( MBEDTLS_ECP_OPS_INV );
+    printf("n");
     MBEDTLS_MPI_CHK( ecp_normalize_jac( grp, pR ) );
+    printf("o");
 
 #if defined(MBEDTLS_ECP_RESTARTABLE)
     if( rs_ctx != NULL && rs_ctx->ma != NULL )
+    {
+        printf("p");
         MBEDTLS_MPI_CHK( mbedtls_ecp_copy( R, pR ) );
+        printf("q");
+    }
 #endif
 
 cleanup:
@@ -2597,9 +2660,12 @@ cleanup:
         mbedtls_internal_ecp_free( grp );
 #endif /* MBEDTLS_ECP_INTERNAL_ALT */
 
+    printf("r");
     mbedtls_ecp_point_free( &mP );
+    printf("s");
 
     ECP_RS_LEAVE( ma );
+    printf("t");
 
     return( ret );
 }
@@ -2669,6 +2735,8 @@ int mbedtls_ecp_check_privkey( const mbedtls_ecp_group *grp,
 {
     ECP_VALIDATE_RET( grp != NULL );
     ECP_VALIDATE_RET( d   != NULL );
+
+    mbedtls_mpi_write_file("d: ", d, 10, NULL);
 
 #if defined(ECP_MONTGOMERY)
     if( mbedtls_ecp_get_type( grp ) == MBEDTLS_ECP_TYPE_MONTGOMERY )

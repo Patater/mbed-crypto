@@ -50,7 +50,10 @@
     do                           \
     {                            \
         if( ( ret = (f) ) != 0 ) \
+        { \
+            printf("MPI_CHK_FAIL %s:%d\n", __FUNCTION__, __LINE__); \
             goto cleanup;        \
+        } \
     } while( 0 )
 
 /*

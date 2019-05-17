@@ -135,10 +135,10 @@ static psa_status_t psa_internal_allocate_key_slot( psa_key_handle_t *handle )
  * \retval #PSA_ERROR_INSUFFICIENT_MEMORY
  */
 static psa_status_t psa_internal_allocate_se_key_slot( psa_key_handle_t *handle,
-                                                    size_t se_index,
-                                                    psa_key_id_t id,
-                                                    psa_key_type_t type,
-                                                    psa_key_slot_number_t se_slot )
+                                                       size_t se_index,
+                                                       psa_key_id_t id,
+                                                       psa_key_type_t type,
+                                                       psa_key_slot_number_t se_slot )
 {
     for( *handle = PSA_KEY_SLOT_COUNT; *handle != 0; --( *handle ) )
     {

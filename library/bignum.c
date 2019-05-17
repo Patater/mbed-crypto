@@ -652,7 +652,6 @@ cleanup:
     return( ret );
 }
 
-#if defined(MBEDTLS_FS_IO)
 /*
  * Read X from an opened file
  */
@@ -733,7 +732,6 @@ cleanup:
 
     return( ret );
 }
-#endif /* MBEDTLS_FS_IO */
 
 
 /* Convert a big-endian byte array aligned to the size of mbedtls_mpi_uint

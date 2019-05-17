@@ -190,11 +190,14 @@ static void ecdsa_restart_det_free( mbedtls_ecdsa_restart_det_ctx *ctx )
     {                                                                \
         rs_ctx->SUB = mbedtls_calloc( 1, sizeof( *rs_ctx->SUB ) );   \
         if( rs_ctx->SUB == NULL )                                    \
+        {\
+            printf("ecp sub-context alloc failed\n"); \
             return( MBEDTLS_ERR_ECP_ALLOC_FAILED );                  \
-                                                                     \
+        }\
         ecdsa_restart_## SUB ##_init( rs_ctx->SUB );                 \
     }                                                                \
 } while( 0 )
+
 
 /* Call this when leaving a function that needs its own sub-context */
 #define ECDSA_RS_LEAVE( SUB )   do {                                 \
@@ -262,6 +265,8 @@ static int ecdsa_sign_restartable( mbedtls_ecp_group *grp,
     mbedtls_mpi k, e, t;
     mbedtls_mpi *pk = &k, *pr = r;
 
+    printf(">ecdsa_sign_restartable()\n");
+
     /* Fail cleanly on curves such as Curve25519 that can't be used for ECDSA */
     if( grp->N.p == NULL )
         return( MBEDTLS_ERR_ECP_BAD_INPUT_DATA );
@@ -298,6 +303,7 @@ static int ecdsa_sign_restartable( mbedtls_ecp_group *grp,
         if( *p_sign_tries++ > 10 )
         {
             ret = MBEDTLS_ERR_ECP_RANDOM_FAILED;
+            printf("random failed\n");
             goto cleanup;
         }
 
@@ -311,6 +317,7 @@ static int ecdsa_sign_restartable( mbedtls_ecp_group *grp,
             if( *p_key_tries++ > 10 )
             {
                 ret = MBEDTLS_ERR_ECP_RANDOM_FAILED;
+                printf("random 2 failed\n");
                 goto cleanup;
             }
 
@@ -415,6 +422,8 @@ static int ecdsa_sign_det_restartable( mbedtls_ecp_group *grp,
     const mbedtls_md_info_t *md_info;
     mbedtls_mpi h;
 
+    printf(">ecdsa_sign_det_restartable()\n");
+
     if( ( md_info = mbedtls_md_info_from_type( md_alg ) ) == NULL )
         return( MBEDTLS_ERR_ECP_BAD_INPUT_DATA );
 
@@ -497,14 +506,21 @@ static int ecdsa_verify_restartable( mbedtls_ecp_group *grp,
     mbedtls_ecp_point R;
     mbedtls_mpi *pu1 = &u1, *pu2 = &u2;
 
+    printf(">ecdsa_verify_restartable()\n");
+
     mbedtls_ecp_point_init( &R );
     mbedtls_mpi_init( &e ); mbedtls_mpi_init( &s_inv );
     mbedtls_mpi_init( &u1 ); mbedtls_mpi_init( &u2 );
+    printf("a");
 
     /* Fail cleanly on curves such as Curve25519 that can't be used for ECDSA */
     if( grp->N.p == NULL )
+    {
+        printf("N.p is NULL\n");
         return( MBEDTLS_ERR_ECP_BAD_INPUT_DATA );
+    }
 
+    printf("b");
     ECDSA_RS_ENTER( ver );
 
 #if defined(MBEDTLS_ECP_RESTARTABLE)
@@ -519,6 +535,7 @@ static int ecdsa_verify_restartable( mbedtls_ecp_group *grp,
             goto muladd;
     }
 #endif /* MBEDTLS_ECP_RESTARTABLE */
+    printf("c");
 
     /*
      * Step 1: make sure r and s are in range 1..n-1
@@ -527,28 +544,40 @@ static int ecdsa_verify_restartable( mbedtls_ecp_group *grp,
         mbedtls_mpi_cmp_int( s, 1 ) < 0 || mbedtls_mpi_cmp_mpi( s, &grp->N ) >= 0 )
     {
         ret = MBEDTLS_ERR_ECP_VERIFY_FAILED;
+        printf("r and s out of range\n");
         goto cleanup;
     }
+    printf("d");
 
     /*
      * Step 3: derive MPI from hashed message
      */
     MBEDTLS_MPI_CHK( derive_mpi( grp, &e, buf, blen ) );
+    printf("e");
+    mbedtls_mpi_write_file("\ne: ", &e, 10, NULL);
 
     /*
      * Step 4: u1 = e / s mod n, u2 = r / s mod n
      */
     ECDSA_BUDGET( MBEDTLS_ECP_OPS_CHK + MBEDTLS_ECP_OPS_INV + 2 );
+    printf("f");
 
+    mbedtls_mpi_write_file("\ns: ", s, 10, NULL);
     MBEDTLS_MPI_CHK( mbedtls_mpi_inv_mod( &s_inv, s, &grp->N ) );
+    printf("g");
 
     MBEDTLS_MPI_CHK( mbedtls_mpi_mul_mpi( pu1, &e, &s_inv ) );
+    printf("h");
     MBEDTLS_MPI_CHK( mbedtls_mpi_mod_mpi( pu1, pu1, &grp->N ) );
+    printf("i");
 
     MBEDTLS_MPI_CHK( mbedtls_mpi_mul_mpi( pu2, r, &s_inv ) );
+    printf("j");
     MBEDTLS_MPI_CHK( mbedtls_mpi_mod_mpi( pu2, pu2, &grp->N ) );
+    printf("k");
 
 #if defined(MBEDTLS_ECP_RESTARTABLE)
+    printf("l");
     if( rs_ctx != NULL && rs_ctx->ver != NULL )
         rs_ctx->ver->state = ecdsa_ver_muladd;
 
@@ -557,20 +586,25 @@ muladd:
     /*
      * Step 5: R = u1 G + u2 Q
      */
+    /* XXX */
     MBEDTLS_MPI_CHK( mbedtls_ecp_muladd_restartable( grp,
                      &R, pu1, &grp->G, pu2, Q, ECDSA_RS_ECP ) );
+    printf("m");
 
     if( mbedtls_ecp_is_zero( &R ) )
     {
         ret = MBEDTLS_ERR_ECP_VERIFY_FAILED;
+        printf("ecp is zero\n");
         goto cleanup;
     }
+    printf("n");
 
     /*
      * Step 6: convert xR to an integer (no-op)
      * Step 7: reduce xR mod n (gives v)
      */
     MBEDTLS_MPI_CHK( mbedtls_mpi_mod_mpi( &R.X, &R.X, &grp->N ) );
+    printf("o");
 
     /*
      * Step 8: check if v (that is, R.X) is equal to r
@@ -578,15 +612,19 @@ muladd:
     if( mbedtls_mpi_cmp_mpi( &R.X, r ) != 0 )
     {
         ret = MBEDTLS_ERR_ECP_VERIFY_FAILED;
+        printf("v (R.X) != r\n");
         goto cleanup;
     }
+    printf("p");
 
 cleanup:
     mbedtls_ecp_point_free( &R );
     mbedtls_mpi_free( &e ); mbedtls_mpi_free( &s_inv );
     mbedtls_mpi_free( &u1 ); mbedtls_mpi_free( &u2 );
 
+    printf("q");
     ECDSA_RS_LEAVE( ver );
+    printf("r");
 
     return( ret );
 }
@@ -600,11 +638,14 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
                           const mbedtls_mpi *r,
                           const mbedtls_mpi *s)
 {
+    printf("param validation begin\n");
     ECDSA_VALIDATE_RET( grp != NULL );
     ECDSA_VALIDATE_RET( Q   != NULL );
     ECDSA_VALIDATE_RET( r   != NULL );
     ECDSA_VALIDATE_RET( s   != NULL );
     ECDSA_VALIDATE_RET( buf != NULL || blen == 0 );
+
+    printf("param validation OK\n");
 
     return( ecdsa_verify_restartable( grp, buf, blen, Q, r, s, NULL ) );
 }

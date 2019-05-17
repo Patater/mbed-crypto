@@ -1005,7 +1005,7 @@ typedef struct {
     /** The owning partition of the slot. If 0, the slot is unowned */
     int32_t owner; /* XXX Not sure we need this. */
 } psa_se_slot_t; /* XXX May be able to make this private, within
-psa_crypto_slot_management.c */
+psa_crypto_slot_management.c, or use psa_key_slot_t */
 
 #ifdef __cplusplus
 }
