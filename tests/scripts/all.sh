@@ -536,7 +536,7 @@ component_check_files () {
 
 component_check_names () {
     msg "test/build: declared and exported names" # < 3s
-    record_status tests/scripts/check-names.sh
+    record_status tests/scripts/check-names.sh -v
 }
 
 component_check_doxygen_warnings () {
@@ -627,7 +627,6 @@ component_build_deprecated () {
     make CC=clang CFLAGS='-O -Werror -Wall -Wextra -Wno-unused-function' tests
 }
 
-
 component_test_depends_curves () {
     msg "test/build: curves.pl (gcc)" # ~ 4 min
     record_status tests/scripts/curves.pl
@@ -665,7 +664,7 @@ component_test_use_psa_crypto_full_cmake_asan() {
     CC=gcc cmake -D CMAKE_BUILD_TYPE:String=Asan .
     make
 
-    msg "test: main suites (MBEDTLS_USE_PSA_CRYPTO)"
+    msg "test: main suites (full minus MBEDTLS_USE_PSA_CRYPTO)"
     make test
 }
 
@@ -784,7 +783,7 @@ component_test_aes_fewer_tables_and_rom_tables () {
 
 component_test_make_shared () {
     msg "build/test: make shared" # ~ 40s
-    make SHARED=1 all check
+    make SHARED=1 all check -j1
 }
 
 component_test_m32_o0 () {
@@ -898,6 +897,8 @@ component_build_arm_none_eabi_gcc () {
     scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
     scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
     scripts/config.pl set MBEDTLS_NO_PLATFORM_ENTROPY
+    scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
+    scripts/config.pl unset MBEDTLS_PSA_ITS_FILE_C
     # following things are not in the default config
     scripts/config.pl unset MBEDTLS_HAVEGE_C # depends on timing.c
     scripts/config.pl unset MBEDTLS_THREADING_PTHREAD
@@ -917,6 +918,8 @@ component_build_arm_none_eabi_gcc_no_udbl_division () {
     scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
     scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
     scripts/config.pl set MBEDTLS_NO_PLATFORM_ENTROPY
+    scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
+    scripts/config.pl unset MBEDTLS_PSA_ITS_FILE_C
     # following things are not in the default config
     scripts/config.pl unset MBEDTLS_HAVEGE_C # depends on timing.c
     scripts/config.pl unset MBEDTLS_THREADING_PTHREAD
@@ -938,6 +941,8 @@ component_build_arm_none_eabi_gcc_no_64bit_multiplication () {
     scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_ITS_C
     scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
     scripts/config.pl unset MBEDTLS_ENTROPY_NV_SEED
+    scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
+    scripts/config.pl unset MBEDTLS_PSA_ITS_FILE_C
     scripts/config.pl set MBEDTLS_NO_PLATFORM_ENTROPY
     # following things are not in the default config
     scripts/config.pl unset MBEDTLS_HAVEGE_C # depends on timing.c
@@ -963,6 +968,8 @@ component_build_armcc () {
     scripts/config.pl unset MBEDTLS_HAVE_TIME
     scripts/config.pl unset MBEDTLS_HAVE_TIME_DATE
     scripts/config.pl set MBEDTLS_NO_PLATFORM_ENTROPY
+    scripts/config.pl unset MBEDTLS_PSA_CRYPTO_STORAGE_C
+    scripts/config.pl unset MBEDTLS_PSA_ITS_FILE_C
     # following things are not in the default config
     scripts/config.pl unset MBEDTLS_DEPRECATED_WARNING
     scripts/config.pl unset MBEDTLS_HAVEGE_C # depends on timing.c
@@ -993,15 +1000,15 @@ component_build_armcc () {
 
 component_build_mingw () {
     msg "build: Windows cross build - mingw64, make (Link Library)" # ~ 30s
-    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror -Wall -Wextra' WINDOWS_BUILD=1 lib programs
+    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror -Wall -Wextra' WINDOWS_BUILD=1 lib programs -j1
 
     # note Make tests only builds the tests, but doesn't run them
-    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror' WINDOWS_BUILD=1 tests
+    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror' WINDOWS_BUILD=1 tests -j1
     make WINDOWS_BUILD=1 clean
 
     msg "build: Windows cross build - mingw64, make (DLL)" # ~ 30s
-    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror -Wall -Wextra' WINDOWS_BUILD=1 SHARED=1 lib programs
-    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror -Wall -Wextra' WINDOWS_BUILD=1 SHARED=1 tests
+    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror -Wall -Wextra' WINDOWS_BUILD=1 SHARED=1 lib programs -j1
+    make CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar LD=i686-w64-minggw32-ld CFLAGS='-Werror -Wall -Wextra' WINDOWS_BUILD=1 SHARED=1 tests -j1
     make WINDOWS_BUILD=1 clean
 }
 support_build_mingw() {
