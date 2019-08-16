@@ -107,7 +107,9 @@ Prerequisites to working with the asymmetric cipher API:
 * Have a valid key in the key slot.
 
 To sign a given message `payload` using RSA:
-1. Set the key policy of the chosen key slot by calling `psa_key_policy_set_usage()` with the `PSA_KEY_USAGE_SIGN` parameter and the algorithm `PSA_ALG_RSA_PKCS1V15_SIGN_RAW`.
+1. Set the key attributes of the chosen key slot by calling
+`psa_key_set_usage_flags()` with the `PSA_KEY_USAGE_SIGN` parameter and
+`psa_key_set_algorithm()` with the algorithm `PSA_ALG_RSA_PKCS1V15_SIGN_RAW`.
 This allows the key in the key slot to be used for RSA signing.
 1. Import the key into the key slot by calling `psa_import_key()`. You can use an already imported key instead of importing a new one.
 1. Call `psa_asymmetric_sign()` and get the output buffer that contains the signature:
@@ -116,19 +118,19 @@ This allows the key in the key slot to be used for RSA signing.
     int key_slot = 1;
     unsigned char key[] = "RSA_KEY";
     unsigned char payload[] = "ASYMMETRIC_INPUT_FOR_SIGN";
-    psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
+    psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
     unsigned char signature[PSA_ASYMMETRIC_SIGNATURE_MAX_SIZE] = {0};
     size_t signature_length;
 
     status = psa_crypto_init();
 
-    /* Import the key */
-    psa_key_policy_set_usage(&policy, PSA_KEY_USAGE_SIGN,
-                             PSA_ALG_RSA_PKCS1V15_SIGN_RAW);
-    status = psa_set_key_policy(key_slot, &policy);
+    /* Set key attributes */
+    psa_key_set_usage(&attributes, PSA_KEY_USAGE_SIGN);
+    psa_key_set_algorithm(&attributes, PSA_ALG_RSA_PKCS1V15_SIGN_RAW);
+    psa_key_set_type(&attributes, PSA_KEY_TYPE_RSA_KEY_PAIR);
 
-    status = psa_import_key(key_slot, PSA_KEY_TYPE_RSA_KEY_PAIR,
-                            key, sizeof(key));
+    /* Import the key */
+    status = psa_import_key(&attributes, key, sizeof(key), &key_slot);
 
     /* Sing message using the key */
     status = psa_asymmetric_sign(key_slot, PSA_ALG_RSA_PKCS1V15_SIGN_RAW,
@@ -330,7 +332,9 @@ Prerequisites to working with the key derivation APIs:
 * The key type must be `PSA_KEY_TYPE_DERIVE`.
 
 Deriving a new AES-CTR 128-bit encryption key into a given key slot using HKDF with a given key, salt and label:
-1. Set the key policy for key derivation by calling `psa_key_policy_set_usage()` with `PSA_KEY_USAGE_DERIVE` parameter, and the algorithm `PSA_ALG_HKDF(PSA_ALG_SHA_256)`.
+1. Set the key attributes for key derivation by calling
+`psa_key_set_usage_flags()` with `PSA_KEY_USAGE_DERIVE` parameter, and
+`psa_key_set_algorithm()` with the algorithm `PSA_ALG_HKDF(PSA_ALG_SHA_256)`.
 1. Import the key into the key slot by calling `psa_import_key()`. You can skip this step and the previous one if the key has already been imported into a known key slot.
 1. Set up the generator using the `psa_key_derivation` function providing a key slot containing a key that can be used for key derivation and a salt and label (Note: salt and label are optional).
 1. Initiate a key policy to for the derived key by calling `psa_key_policy_set_usage()` with `PSA_KEY_USAGE_ENCRYPT` parameter and the algorithm `PSA_ALG_CTR`.
@@ -342,7 +346,7 @@ At this point the derived key slot holds a new 128-bit AES-CTR encryption key de
 ```C
     psa_key_slot_t base_key = 1;
     psa_key_slot_t derived_key = 2;
-    psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
+    psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     unsigned char key[] = {
         0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
@@ -357,7 +361,6 @@ At this point the derived key slot holds a new 128-bit AES-CTR encryption key de
                               0xf7, 0xf8, 0xf9 };
 
     psa_algorithm_t alg = PSA_ALG_HKDF(PSA_ALG_SHA_256);
-    psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
     psa_key_derivation_operation_t generator = PSA_KEY_DERIVATION_OPERATION_INIT;
     size_t derived_bits = 128;
     size_t capacity = PSA_BITS_TO_BYTES(derived_bits);
@@ -365,10 +368,12 @@ At this point the derived key slot holds a new 128-bit AES-CTR encryption key de
     status = psa_crypto_init();
 
     /* Import a key for use in key derivation, if such a key has already been imported you can skip this part */
-    psa_key_policy_set_usage(&policy, PSA_KEY_USAGE_DERIVE, alg);
-    status = psa_set_key_policy(base_key, &policy);
+    psa_key_set_usage_flags(&attributes, PSA_KEY_USAGE_DERIVE);
+    psa_key_set_algorithm(&attributes, alg);
+    psa_key_set_type(&attributes, PSA_KEY_TYPE_DERIVE);
 
-    status = psa_import_key(base_key, PSA_KEY_TYPE_DERIVE, key, sizeof(key));
+    XXX needs work XXX
+    status = psa_import_key(&attributes, base_key, key, sizeof(key));
 
     /* Derive a key into a key slot*/
     status = psa_key_derivation(&generator, base_key, alg, salt, sizeof(salt),
@@ -415,16 +420,17 @@ To authenticate and encrypt a message:
     size_t output_size = 0;
     size_t output_length = 0;
     size_t tag_length = 16;
-    psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
+    psa_key_attributes_t policy = PSA_KEY_ATTRIBUTES_INIT;
 
     output_size = sizeof(input_data) + tag_length;
     output_data = malloc(output_size);
     status = psa_crypto_init();
 
-    psa_key_policy_set_usage(&policy, PSA_KEY_USAGE_ENCRYPT, PSA_ALG_CCM);
-    status = psa_set_key_policy(slot, &policy);
+    psa_key_set_usage_flags(&attributes, PSA_KEY_USAGE_ENCRYPT);
+    psa_key_set_algorithm(&attributes, PSA_ALG_CCM);
+    psa_key_set_type(&attributes, PSA_KEY_TYPE_AES);
 
-    status = psa_import_key(slot, PSA_KEY_TYPE_AES, key, sizeof(key));
+    status = psa_import_key(&attributes, key, sizeof(key), &slot);
 
     status = psa_aead_encrypt(slot, PSA_ALG_CCM,
                               nonce, sizeof(nonce),
@@ -462,16 +468,17 @@ To authenticate and decrypt a message:
     unsigned char *output_data = NULL;
     size_t output_size = 0;
     size_t output_length = 0;
-    psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
+    psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     output_size = sizeof(input_data);
     output_data = malloc(output_size);
     status = psa_crypto_init();
 
-    psa_key_policy_set_usage(&policy, PSA_KEY_USAGE_DECRYPT, PSA_ALG_CCM);
-    status = psa_set_key_policy(slot, &policy);
+    psa_key_set_usage_flags(&attributes, PSA_KEY_USAGE_DECRYPT);
+    psa_key_set_algorithm(&attributes, PSA_ALG_CCM);
+    psa_key_set_type(&attributes, PSA_KEY_TYPE_AES);
 
-    status = psa_import_key(slot, PSA_KEY_TYPE_AES, key, sizeof(key));
+    status = psa_import_key(&attributes, key, sizeof(key), slot);
 
     status = psa_aead_decrypt(slot, PSA_ALG_CCM,
                               nonce, sizeof(nonce),
@@ -493,7 +500,9 @@ Prerequisites to using key generation and export APIs:
 * Initialize the library with a successful call to `psa_crypto_init`.
 
 Generate a piece of random 128-bit AES data:
-1. Set the key policy for key generation by calling `psa_key_policy_set_usage()` with the `PSA_KEY_USAGE_EXPORT` parameter and the algorithm `PSA_ALG_GCM`.
+1. Set the key attributes for key generation by calling
+`psa_key_set_usage_flags()` with the `PSA_KEY_USAGE_EXPORT` parameter and
+`psa_key_set_algorithm()` with the algorithm `PSA_ALG_GCM`.
 1. Generate a random AES key by calling `psa_generate_key()`.
 1. Export the generated key by calling `psa_export_key()`:
 ```C
@@ -502,15 +511,17 @@ Generate a piece of random 128-bit AES data:
     size_t exported_size = bits;
     size_t exported_length = 0;
     uint8_t *exported = malloc(exported_size);
-    psa_key_policy_t policy = PSA_KEY_POLICY_INIT;
+    psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
 
     psa_crypto_init();
 
-    psa_key_policy_set_usage(&policy, PSA_KEY_USAGE_EXPORT, PSA_ALG_GCM);
+    psa_key_set_usage_flags(&attributes, PSA_KEY_USAGE_EXPORT);
+    psa_key_set_algorithm(&attributes, PSA_ALG_GCM);
+    psa_key_set_type(&attributes, PSA_KEY_TYPE_AES);
     psa_set_key_policy(slot, &policy);
 
     /* Generate a key */
-    psa_generate_key(slot, PSA_KEY_TYPE_AES, bits);
+    psa_generate_key(&attributes, &slot);
 
     psa_export_key(slot, exported, exported_size, &exported_length)
 
