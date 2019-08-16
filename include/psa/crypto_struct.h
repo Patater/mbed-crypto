@@ -35,6 +35,10 @@
 #ifndef PSA_CRYPTO_STRUCT_H
 #define PSA_CRYPTO_STRUCT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Include the Mbed TLS configuration file, the way Mbed TLS does it
  * in each of its header files. */
 #if !defined(MBEDTLS_CONFIG_FILE)
@@ -445,5 +449,9 @@ static inline size_t psa_get_key_bits(
 {
     return( attributes->core.bits );
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PSA_CRYPTO_STRUCT_H */
