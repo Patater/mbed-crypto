@@ -371,7 +371,13 @@ static inline void psa_set_key_lifetime(psa_key_attributes_t *attributes,
 {
     attributes->core.lifetime = lifetime;
     if( lifetime == PSA_KEY_LIFETIME_VOLATILE )
+#ifdef MBEDTLS_PSA_CRYPTO_KEY_FILE_ID_ENCODES_OWNER
+        attributes->core.id.key_id = 0;
+        /* XXX How do we determine the owner to set? */
+        attributes->core.id.owner = 0;
+#else
         attributes->core.id = 0;
+#endif
 }
 
 static inline psa_key_lifetime_t psa_get_key_lifetime(
