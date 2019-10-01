@@ -1924,6 +1924,7 @@ psa_status_t mbedtls_psa_register_se_key(
     {
         status = drv->key_management->p_validate_slot_number(
             psa_get_se_driver_context( driver ),
+            drv->internal.persistent_data,
             attributes,
             PSA_KEY_CREATION_REGISTER,
             slot->data.se.slot_number );
